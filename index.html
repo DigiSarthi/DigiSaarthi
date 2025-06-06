@@ -3,36 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digi Sarthi - Your Digital Service Partner</title>
-    <meta name="description" content="Professional digital services at your doorstep. CSC services, government forms, PAN card, Aadhaar updates and more.">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Digi Saarthi - Your One-Stop CSC Service Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- News Ticker -->
-    <div class="news-ticker">
-        <div class="news-ticker-label">Latest Updates</div>
-        <div class="news-ticker-content">
-            New PM Kisan Yojana applications open • Digital India mission expanding services • Aadhaar updates now faster • Free skill development courses available • New job opportunities in digital sector • Government scheme benefits increased
-        </div>
-    </div>
-
-    <!-- Navigation Header -->
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="d-flex justify-between align-center">
                 <div class="navbar-brand">
-                    <i class="fas fa-laptop-code text-accent"></i>
-                    <span>Digi Sarthi</span>
+                    <h1>Digi Saarthi</h1>
                 </div>
-                <div class="navbar-nav">
-                    <a href="#home" class="nav-link active">Home</a>
-                    <a href="#services" class="nav-link">Services</a>
-                    <a href="#orders" class="nav-link">Orders</a>
-                    <a href="#login" class="nav-link">Login</a>
-                    <a href="#register" class="nav-link btn-outline-secondary">Register</a>
+                <div class="d-flex align-center">
+                    <div class="navbar-nav d-flex align-center">
+                        <a href="#home" class="nav-link active">Home</a>
+                        <a href="#services" class="nav-link">Services</a>
+                        <a href="#about" class="nav-link">About</a>
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </div>
+                    <div class="d-flex align-center" style="margin-left: 20px; gap: 10px;">
+                        <button class="btn btn-outline">Login</button>
+                        <button class="btn btn-primary">Register</button>
+                    </div>
                 </div>
+                <!-- Mobile Menu Toggle -->
                 <div class="nav-toggle">
                     <span></span>
                     <span></span>
@@ -42,434 +36,355 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
+    <!-- Hero Banner Section -->
+    <section id="home" class="hero">
         <div class="container">
             <div class="row align-center">
-                <div class="col-6">
-                    <div class="hero-content animate slide-in-left">
-                        <h1 class="hero-title">Your Digital Service Partner</h1>
-                        <p class="hero-subtitle">
-                            Get all government and digital services at your doorstep through our trusted CSC center. 
-                            Fast, reliable, and professional service guaranteed.
-                        </p>
-                        <div class="d-flex" style="gap: 15px; margin-top: 30px;">
+                <div class="col-12">
+                    <div class="hero-content text-center">
+                        <h1 class="hero-title animate fade-in">Welcome to Digi Saarthi</h1>
+                        <p class="hero-subtitle animate slide-in">Your One-Stop CSC Service Hub</p>
+                        <p class="lead">Providing comprehensive digital services at your doorstep through Common Service Centers</p>
+                        <div class="d-flex justify-center align-center" style="gap: 15px; margin-top: 30px;">
                             <a href="#services" class="hero-btn">Explore Services</a>
-                            <a href="#contact" class="btn btn-outline">Contact Us</a>
+                            <button class="btn btn-outline-secondary btn-lg">Download App</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="hero-image animate slide-in">
-                        <i class="fas fa-users-cog" style="font-size: 15rem; color: rgba(255,255,255,0.1);"></i>
-                    </div>
-                </div>
             </div>
+        </div>
+        <!-- Hero Banner Image Placeholder -->
+        <div class="hero-banner-container" style="margin-top: 40px;">
+            <img src="banner.jpg" 
+                 alt="Digi Saarthi Hero Banner" class="w-100 rounded-lg">
         </div>
     </section>
 
     <!-- Services Section -->
-<section class="section" id="services">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="text-primary">Our Digital Services</h2>
-            <p class="lead text-muted">Comprehensive digital solutions for all your needs</p>
-        </div>
-        
-        <!-- Row 1 -->
-        <div class="row">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-id-card"></i>
-                    </div>
-                    <h4>PAN Card Apply</h4>
-                    <p>Quick and hassle-free PAN card application with doorstep delivery service.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('PAN Card Apply')">Apply Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-fingerprint"></i>
-                    </div>
-                    <h4>Aadhaar Update</h4>
-                    <p>Update your Aadhaar details including address, mobile number, and biometric data.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Aadhaar Update')">Update Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <h4>Online Seva</h4>
-                    <p>Complete range of government online services and digital applications.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Online Seva')">Access Now</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row 2 -->
-        <div class="row mt-4">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-image"></i>
-                    </div>
-                    <h4>Photo/Signature Resize</h4>
-                    <p>Professional photo and signature resizing for all government applications.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Photo/Signature Resize')">Resize Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <h4>Government Form Fillup</h4>
-                    <p>Expert assistance in filling various government forms and applications.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Government Form Fillup')">Get Help</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-link"></i>
-                    </div>
-                    <h4>Mobile-Aadhaar Link</h4>
-                    <p>Check and verify your mobile number linking status with Aadhaar.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Mobile-Aadhaar Link')">Check Status</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row 3 - New Services -->
-        <div class="row mt-4">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-passport"></i>
-                    </div>
-                    <h4>Passport Apply</h4>
-                    <p>Complete passport application assistance with document verification and submission.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Passport Apply')">Apply Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-car"></i>
-                    </div>
-                    <h4>Driving License</h4>
-                    <p>New driving license application and renewal services with slot booking.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Driving License')">Apply Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h4>Education Certificates</h4>
-                    <p>Digital verification and download of educational certificates and marksheets.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Education Certificates')">Verify Now</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row 4 - Additional Services -->
-        <div class="row mt-4">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-hospital"></i>
-                    </div>
-                    <h4>Health Card</h4>
-                    <p>Ayushman Bharat health card registration and ABHA ID creation services.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Health Card')">Register Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-seedling"></i>
-                    </div>
-                    <h4>PM Kisan Yojana</h4>
-                    <p>Farmer registration for PM Kisan Yojana and status check services.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('PM Kisan Yojana')">Register Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-money-check"></i>
-                    </div>
-                    <h4>Income Certificate</h4>
-                    <p>Online application for income, caste, and domicile certificates.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Income Certificate')">Apply Now</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row 5 - Banking & Financial Services -->
-        <div class="row mt-4">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <h4>Bank Account Opening</h4>
-                    <p>Jan Dhan and regular bank account opening with documentation support.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Bank Account Opening')">Open Account</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h4>Insurance Services</h4>
-                    <p>Life, health, and crop insurance applications with premium payment facility.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Insurance Services')">Get Insured</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h4>Mobile Recharge</h4>
-                    <p>Mobile, DTH, and utility bill payments with instant confirmation.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Mobile Recharge')">Recharge Now</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row 6 - Digital Services -->
-        <div class="row mt-4">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-print"></i>
-                    </div>
-                    <h4>Print & Scan</h4>
-                    <p>Document printing, scanning, and photocopying services at affordable rates.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Print & Scan')">Print Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <h4>Email Services</h4>
-                    <p>Email account creation, management, and document sharing assistance.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Email Services')">Create Email</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-laptop"></i>
-                    </div>
-                    <h4>Computer Training</h4>
-                    <p>Basic computer literacy and digital skills training programs available.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Computer Training')">Learn Now</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row 7 - Employment Services -->
-        <div class="row mt-4">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <h4>Job Portal Registration</h4>
-                    <p>Registration on government job portals and employment exchange services.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Job Portal Registration')">Register Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h4>Skill Development</h4>
-                    <p>Skill India program registration and certification course enrollment.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Skill Development')">Enroll Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <h4>Housing Scheme</h4>
-                    <p>PM Awas Yojana and other housing scheme applications and status check.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Housing Scheme')">Apply Now</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row 8 - Utility Services -->
-        <div class="row mt-4">
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h4>Electricity Bill</h4>
-                    <p>Online electricity bill payment and new connection application services.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Electricity Bill')">Pay Bill</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <h4>Gas Connection</h4>
-                    <p>LPG gas connection booking and subsidy transfer tracking services.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Gas Connection')">Book Now</a>
-                </div>
-            </div>
-            
-            <div class="col-4">
-                <div class="service-card hover-lift">
-                    <div class="service-card-icon">
-                        <i class="fas fa-tint"></i>
-                    </div>
-                    <h4>Water Connection</h4>
-                    <p>Municipal water connection application and bill payment facility.</p>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="contactWhatsApp('Water Connection')">Apply Now</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<script>
-// WhatsApp Contact Function
-function contactWhatsApp(serviceName) {
-    // Your WhatsApp number (without +)
-    const phoneNumber = '917608913436';
-    
-    // Message template
-    const message = `Hi Digi Sarthi!
-
-I want ${serviceName} service. Please provide details and pricing.
-
-Thank you!`;
-    
-    // Encode message for URL
-    const encodedMessage = encodeURIComponent(message);
-    
-    // WhatsApp URL
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
-    // Open WhatsApp in new tab
-    window.open(whatsappURL, '_blank');
-}
-</script>
-
-    <!-- Why Choose Us Section -->
-    <section class="section bg-light">
-        <div class="container">
-            <div class="row align-center">
-                <div class="col-6">
-                    <div class="animate slide-in-left">
-                        <h2 class="text-primary">Why Choose Digi Sarthi?</h2>
-                        <p class="lead">Your trusted partner for all digital services</p>
-                        
-                        <div class="info-box">
-                            <h4><i class="fas fa-shield-alt text-accent"></i> Trusted CSC Partner</h4>
-                            <p>Authorized Common Service Center with government certification and secure processes.</p>
-                        </div>
-                        
-                        <div class="info-box">
-                            <h4><i class="fas fa-clock text-accent"></i> Fast & Efficient Service</h4>
-                            <p>Quick turnaround time with same-day service for most applications and updates.</p>
-                        </div>
-                        
-                        <div class="info-box">
-                            <h4><i class="fas fa-handshake text-accent"></i> Local Support</h4>
-                            <p>Personal assistance in your local language with dedicated customer support.</p>
-                        </div>
-                        
-                        <div class="info-box">
-                            <h4><i class="fas fa-money-bill-wave text-accent"></i> Affordable Pricing</h4>
-                            <p>Transparent pricing with no hidden charges. Best rates in the market guaranteed.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-6">
-                    <div class="dashboard-tile text-center animate zoom-in">
-                        <h3 class="text-primary">Service Statistics</h3>
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <h2 class="text-accent">5000+</h2>
-                                <p>Happy Customers</p>
-                            </div>
-                            <div class="col-6">
-                                <h2 class="text-accent">50+</h2>
-                                <p>Services Available</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <h2 class="text-accent">24/7</h2>
-                                <p>Online Support</p>
-                            </div>
-                            <div class="col-6">
-                                <h2 class="text-accent">99%</h2>
-                                <p>Success Rate</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Orders Section -->
-    <section class="section" id="orders">
+    <section id="services" class="section bg-light">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="text-primary">Track Your Orders</h2>
-                <p class="lead text-muted">Stay updated with your service requests</p>
+                <h2 class="section-title">Our Digital Services</h2>
+                <p class="lead text-muted">Complete range of government and digital services available at your nearest CSC</p>
             </div>
-            
-            <div class="row justify-center">
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <i class="fas fa-search" style="font-size: 3rem; color: #FF9933; margin-bottom: 20px;"></i>
-                            <h4>Order Tracking</h4>
-                            <p>Enter your order ID to track the status of your service request.</p>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Enter Order ID" style="margin-bottom: 15px;">
-                                <button class="btn btn-secondary">Track Order</button>
+
+            <!-- Service Categories -->
+            <div class="row">
+                <!-- Government Services -->
+                <div class="col-12 mb-4">
+                    <h3 class="text-primary mb-3">📋 Government & Citizen Services</h3>
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🆔</div>
+                                <h4 class="card-title">Aadhaar Services</h4>
+                                <p class="card-text">New enrollment, updates, corrections and PVC card orders</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your Aadhaar Services." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">💳</div>
+                                <h4 class="card-title">PAN Card</h4>
+                                <p class="card-text">New PAN application, corrections and instant e-PAN</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/91760891436?text=I'm interested in your PAN Card service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">📘</div>
+                                <h4 class="card-title">Passport Services</h4>
+                                <p class="card-text">Fresh passport, renewal, and police verification</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your Passport Services." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🗳️</div>
+                                <h4 class="card-title">Voter ID Card</h4>
+                                <p class="card-text">New voter registration and voter ID corrections</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your Voter ID Card service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🍚</div>
+                                <h4 class="card-title">Ration Card</h4>
+                                <p class="card-text">New ration card application and family member additions</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your Ration Card service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">📋</div>
+                                <h4 class="card-title">Certificates</h4>
+                                <p class="card-text">Caste, Income, Resident & other government certificates</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your Certificate services." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welfare Schemes -->
+                <div class="col-12 mb-4">
+                    <h3 class="text-primary mb-3">🏥 Welfare & Scheme Services</h3>
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🌾</div>
+                                <h4 class="card-title">PM Kisan</h4>
+                                <p class="card-text">Farmer registration and benefit applications</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your PM Kisan service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🏥</div>
+                                <h4 class="card-title">Ayushman Bharat</h4>
+                                <p class="card-text">Health insurance card registration and renewals</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your Ayushman Bharat service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🎓</div>
+                                <h4 class="card-title">Scholarship Apply</h4>
+                                <p class="card-text">Various government scholarship applications</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in your Scholarship application service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Digital Services -->
+                <div class="col-12 mb-4">
+                    <h3 class="text-primary mb-3">💻 Digital & Online Services</h3>
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">📱</div>
+                                <h4 class="card-title">Mobile Recharge</h4>
+                                <p class="card-text">Prepaid recharge, postpaid bill payment & DTH recharge</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Recharge Now</button>
+                                    <a href="https://wa.me/917608913436?text=I need help with Mobile Recharge." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">⚡</div>
+                                <h4 class="card-title">Electricity Bill</h4>
+                                <p class="card-text">Pay electricity bills for all major state boards</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Pay Now</button>
+                                    <a href="https://wa.me/917608913436?text=I need help with Electricity Bill payment." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🗂️</div>
+                                <h4 class="card-title">DigiLocker</h4>
+                                <p class="card-text">Digital document storage and verification</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Access Now</button>
+                                    <a href="https://wa.me/917608913436?text=I need help with DigiLocker service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">📄</div>
+                                <h4 class="card-title">Online Form Fillup</h4>
+                                <p class="card-text">Government and private form filling assistance</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Get Help</button>
+                                    <a href="https://wa.me/917608913436?text=I need help with Online Form Fillup." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🏛️</div>
+                                <h4 class="card-title">E-District Services</h4>
+                                <p class="card-text">District-level government service applications</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I'm interested in E-District Services." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🎓</div>
+                                <h4 class="card-title">College Admission</h4>
+                                <p class="card-text">Online college admission form filling and guidance</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I need help with College Admission." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Printing & Documentation -->
+                <div class="col-12 mb-4">
+                    <h3 class="text-primary mb-3">🖨️ Printing & Documentation</h3>
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">📸</div>
+                                <h4 class="card-title">Photo Print</h4>
+                                <p class="card-text">Passport size photos and document photos</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Order Now</button>
+                                    <a href="https://wa.me/917608913436?text=I need Photo Print service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">🛡️</div>
+                                <h4 class="card-title">Lamination</h4>
+                                <p class="card-text">Document lamination and protection services</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Get Service</button>
+                                    <a href="https://wa.me/917608913436?text=I need Lamination service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">📋</div>
+                                <h4 class="card-title">Resume Making</h4>
+                                <p class="card-text">Professional resume creation and formatting</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Create Resume</button>
+                                    <a href="https://wa.me/917608913436?text=I need help with Resume Making." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Specialized Services -->
+                <div class="col-12 mb-4">
+                    <h3 class="text-primary mb-3">⚙️ Specialized Services</h3>
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">📱</div>
+                                <h4 class="card-title">Mobile Update in Aadhaar</h4>
+                                <p class="card-text">Update mobile number in Aadhaar card online</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Update Now</button>
+                                    <a href="https://wa.me/917608913436?text=I want to update mobile number in Aadhaar." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">💳</div>
+                                <h4 class="card-title">Aadhaar PVC Order</h4>
+                                <p class="card-text">Order physical PVC Aadhaar card online</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Order Now</button>
+                                    <a href="https://wa.me/917608913436?text=I want to order Aadhaar PVC card." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="service-card hover-lift">
+                                <div class="service-card-icon">👮</div>
+                                <h4 class="card-title">Police Verification</h4>
+                                <p class="card-text">Police verification for passport and other purposes</p>
+                                <div class="d-flex justify-center" style="gap: 10px;">
+                                    <button class="btn btn-primary btn-sm">Apply Now</button>
+                                    <a href="https://wa.me/917608913436?text=I need Police Verification service." 
+                                       class="btn btn-secondary btn-sm" target="_blank">WhatsApp</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="text-center mt-5">
+                <div class="content-box">
+                    <h3>Need Help with Any Service?</h3>
+                    <p class="lead">Our trained professionals are here to assist you with all government and digital services</p>
+                    <div class="d-flex justify-center" style="gap: 15px; margin-top: 20px;">
+                        <a href="https://wa.me/917608913436?text=Hi, I need help with CSC services." 
+                           class="btn btn-secondary btn-lg" target="_blank">
+                           💬 Chat on WhatsApp
+                        </a>
+                        <button class="btn btn-outline-primary btn-lg">📞 Call Us Now</button>
                     </div>
                 </div>
             </div>
@@ -480,422 +395,525 @@ Thank you!`;
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-section">
-                        <h3 class="footer-title">Digi Sarthi</h3>
-                        <p>Your trusted digital service partner providing comprehensive CSC services with professional excellence.</p>
+                        <h3 class="footer-title">Digi Saarthi</h3>
+                        <p>Your trusted partner for all government and digital services through Common Service Centers.</p>
                         <div class="footer-social">
-                            <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="footer-social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="footer-social-link">📘</a>
+                            <a href="#" class="footer-social-link">🐦</a>
+                            <a href="#" class="footer-social-link">📷</a>
+                            <a href="#" class="footer-social-link">💼</a>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-section">
-                        <h3 class="footer-title">Quick Links</h3>
+                        <h4 class="footer-title">Quick Links</h4>
                         <ul class="footer-links">
                             <li><a href="#home">Home</a></li>
                             <li><a href="#services">Services</a></li>
-                            <li><a href="#orders">Track Orders</a></li>
                             <li><a href="#about">About Us</a></li>
                             <li><a href="#contact">Contact</a></li>
                             <li><a href="#privacy">Privacy Policy</a></li>
                         </ul>
                     </div>
                 </div>
-                
-                <div class="col-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-section">
-                        <h3 class="footer-title">Contact Info</h3>
-                        <div style="margin-bottom: 15px;">
-                            <i class="fas fa-map-marker-alt" style="margin-right: 10px; color: #FF9933;"></i>
-                            <span>Dulkibandh, Main Road <br>Bijmara, Kalahandi, Pin-766018</span>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <i class="fas fa-phone" style="margin-right: 10px; color: #FF9933;"></i>
-                            <span>+91 7608913436</span>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <i class="fas fa-envelope" style="margin-right: 10px; color: #FF9933;"></i>
-                            <span>cscdulkibandh@gmail.com</span>
-                        </div>
-                        <div>
-                            <i class="fas fa-clock" style="margin-right: 10px; color: #FF9933;"></i>
-                            <span>Mon-Sat: 9:00 AM - 6:00 PM</span>
-                        </div>
+                        <h4 class="footer-title">Popular Services</h4>
+                        <ul class="footer-links">
+                            <li><a href="#">Aadhaar Services</a></li>
+                            <li><a href="#">PAN Card</a></li>
+                            <li><a href="#">Passport Services</a></li>
+                            <li><a href="#">Mobile Recharge</a></li>
+                            <li><a href="#">Bill Payments</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-section">
+                        <h4 class="footer-title">Contact Info</h4>
+                        <ul class="footer-links">
+                            <li>📍 Your CSC Address Here</li>
+                            <li>📞 +91 XXXXXXXXXX</li>
+                            <li>✉️ info@digisaarthi.com</li>
+                            <li>🕒 Mon-Sat: 9AM-6PM</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            
             <div class="footer-bottom">
-                <p>&copy; 2024 Digi Sarthi. All rights reserved. | Powered by Digital India Initiative</p>
+                <p>&copy; 2024 Digi Saarthi. All rights reserved. | Powered by Common Service Center</p>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script>
-        // Mobile Navigation Toggle
-        document.querySelector('.nav-toggle').addEventListener('click', function() {
-            document.querySelector('.navbar-nav').classList.toggle('active');
-        });
+    <!-- WhatsApp Floating Button -->
+    <div class="position-fixed" style="bottom: 20px; right: 20px; z-index: 1000;">
+        <a href="https://wa.me/917608913436?text=Hi, I need help with your services." 
+           target="_blank" class="btn btn-secondary rounded-circle" 
+           style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+           💬
+        </a>
+    </div>
 
-        // Smooth Scrolling for Navigation Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add animation classes on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe animated elements
-        document.querySelectorAll('.animate').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease';
-            observer.observe(el);
-        });
-    </script>
-</body>
-</html>
-
-<!-- Add this login modal section before the closing </body> tag -->
-
-<!-- Login Modal -->
-<div id="loginModal" class="modal">
-    <div class="modal-content">
+    <!-- Login Modal -->
+<div id="loginModal" class="modal-overlay">
+    <div class="modal-container">
         <div class="modal-header">
-            <h3>Login to Digi Sarthi</h3>
-            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Welcome Back</h2>
+            <p class="modal-subtitle">Sign in to access your CSC services</p>
+            <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="loginForm">
+            <form class="auth-form" id="loginForm">
                 <div class="form-group">
-                    <label for="email">Email or Mobile Number</label>
-                    <input type="text" id="email" name="email" class="form-control" placeholder="Enter email or mobile number" required>
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <div style="position: relative;">
+                        <span class="input-icon">📧</span>
+                        <input type="email" 
+                               id="loginEmail" 
+                               class="form-input with-icon" 
+                               placeholder="Enter your email"
+                               required>
+                    </div>
+                    <div class="error-message" id="loginEmailError"></div>
                 </div>
+                
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <div style="position: relative;">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" 
+                               id="loginPassword" 
+                               class="form-input with-icon" 
+                               placeholder="Enter your password"
+                               required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error-message" id="loginPasswordError"></div>
                 </div>
-                <div class="form-group">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="remember">
-                        <span class="checkmark"></span>
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
                         Remember me
                     </label>
+                    <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot Password?</a>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                
+                <button type="submit" class="form-btn btn-login">
+                    Sign In
+                </button>
+                
+                <div class="success-message" id="loginSuccess"></div>
+                <div class="error-message" id="loginError"></div>
             </form>
             
-            <div class="login-options">
-                <p><a href="#" id="forgotPassword">Forgot Password?</a></p>
-                <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+            <div class="social-login">
+                <div class="social-divider">Or continue with</div>
+                <div class="social-buttons">
+                    <a href="#" class="social-btn" onclick="socialLogin('google')">
+                        🔍 Google
+                    </a>
+                    <a href="#" class="social-btn" onclick="socialLogin('facebook')">
+                        📘 Facebook
+                    </a>
+                </div>
+            </div>
+            
+            <div class="switch-form">
+                Don't have an account?
+                <a href="#" class="switch-link" onclick="switchToRegister()">Create Account</a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Registration Modal -->
-<div id="registerModal" class="modal">
-    <div class="modal-content">
+<!-- Register Modal -->
+<div id="registerModal" class="modal-overlay">
+    <div class="modal-container">
         <div class="modal-header">
-            <h3>Register with Digi Sarthi</h3>
-            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Create Account</h2>
+            <p class="modal-subtitle">Join Digi Saarthi for easy CSC services</p>
+            <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="registerForm">
+            <form class="auth-form" id="registerForm">
                 <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your full name" required>
+                    <label class="form-label" for="registerName">Full Name</label>
+                    <div style="position: relative;">
+                        <span class="input-icon">👤</span>
+                        <input type="text" 
+                               id="registerName" 
+                               class="form-input with-icon" 
+                               placeholder="Enter your full name"
+                               required>
+                    </div>
+                    <div class="error-message" id="registerNameError"></div>
                 </div>
+                
                 <div class="form-group">
-                    <label for="regEmail">Email</label>
-                    <input type="email" id="regEmail" name="email" class="form-control" placeholder="Enter your email" required>
+                    <label class="form-label" for="registerEmail">Email Address</label>
+                    <div style="position: relative;">
+                        <span class="input-icon">📧</span>
+                        <input type="email" 
+                               id="registerEmail" 
+                               class="form-input with-icon" 
+                               placeholder="Enter your email"
+                               required>
+                    </div>
+                    <div class="error-message" id="registerEmailError"></div>
                 </div>
+                
                 <div class="form-group">
-                    <label for="mobile">Mobile Number</label>
-                    <input type="tel" id="mobile" name="mobile" class="form-control" placeholder="Enter 10-digit mobile number" required>
+                    <label class="form-label" for="registerPhone">Mobile Number</label>
+                    <div style="position: relative;">
+                        <span class="input-icon">📱</span>
+                        <input type="tel" 
+                               id="registerPhone" 
+                               class="form-input with-icon" 
+                               placeholder="Enter your mobile number"
+                               pattern="[0-9]{10}"
+                               required>
+                    </div>
+                    <div class="error-message" id="registerPhoneError"></div>
                 </div>
+                
                 <div class="form-group">
-                    <label for="regPassword">Password</label>
-                    <input type="password" id="regPassword" name="password" class="form-control" placeholder="Create a strong password" required>
+                    <label class="form-label" for="registerPassword">Password</label>
+                    <div style="position: relative;">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" 
+                               id="registerPassword" 
+                               class="form-input with-icon" 
+                               placeholder="Create a strong password"
+                               required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error-message" id="registerPasswordError"></div>
                 </div>
+                
                 <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <div style="position: relative;">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" 
+                               id="confirmPassword" 
+                               class="form-input with-icon" 
+                               placeholder="Confirm your password"
+                               required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
                 </div>
-                <div class="form-group">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="terms" required>
-                        <span class="checkmark"></span>
-                        I agree to the <a href="#">Terms & Conditions</a>
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="agreeTerms" required>
+                        I agree to <a href="#" class="forgot-password">Terms & Conditions</a>
                     </label>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full">Register</button>
+                
+                <button type="submit" class="form-btn btn-register">
+                    Create Account
+                </button>
+                
+                <div class="success-message" id="registerSuccess"></div>
+                <div class="error-message" id="registerError"></div>
             </form>
             
-            <div class="login-options">
-                <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+            <div class="social-login">
+                <div class="social-divider">Or sign up with</div>
+                <div class="social-buttons">
+                    <a href="#" class="social-btn" onclick="socialLogin('google')">
+                        🔍 Google
+                    </a>
+                    <a href="#" class="social-btn" onclick="socialLogin('facebook')">
+                        📘 Facebook
+                    </a>
+                </div>
+            </div>
+            
+            <div class="switch-form">
+                Already have an account?
+                <a href="#" class="switch-link" onclick="switchToLogin()">Sign In</a>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 0;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 450px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    animation: slideDown 0.3s ease;
-}
-
-.modal-header {
-    background: linear-gradient(135deg, #FF9933, #138808);
-    color: white;
-    padding: 20px;
-    border-radius: 10px 10px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.close-modal {
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close-modal:hover {
-    color: #ccc;
-}
-
-.modal-body {
-    padding: 30px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-}
-
-.form-control {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e1e1e1;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-    box-sizing: border-box;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #FF9933;
-    box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1);
-}
-
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-}
-
-.checkbox-container input {
-    margin-right: 10px;
-}
-
-.btn-full {
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 10px;
-}
-
-.login-options {
-    text-align: center;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.login-options p {
-    margin: 10px 0;
-}
-
-.login-options a {
-    color: #FF9933;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.login-options a:hover {
-    text-decoration: underline;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .modal-content {
-        margin: 10% auto;
-        width: 95%;
-    }
-    
-    .modal-body {
-        padding: 20px;
-    }
-}
-</style>
-
+<!-- JavaScript for Login/Register Functionality -->
 <script>
-// Modal functionality
+// Modal Functions
+function openModal(modalId) {
+    document.getElementById(modalId).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function switchToRegister() {
+    closeModal('loginModal');
+    openModal('registerModal');
+}
+
+function switchToLogin() {
+    closeModal('registerModal');
+    openModal('loginModal');
+}
+
+// Password Toggle
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.parentElement.querySelector('.password-toggle');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        button.textContent = '👁️';
+    }
+}
+
+// Form Validation
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function validatePhone(phone) {
+    const re = /^[0-9]{10}$/;
+    return re.test(phone);
+}
+
+function showError(elementId, message) {
+    const errorElement = document.getElementById(elementId);
+    errorElement.textContent = message;
+    errorElement.classList.add('show');
+    
+    const input = errorElement.previousElementSibling.querySelector('.form-input') || 
+                  errorElement.previousElementSibling;
+    if (input) input.classList.add('error');
+}
+
+function clearError(elementId) {
+    const errorElement = document.getElementById(elementId);
+    errorElement.classList.remove('show');
+    
+    const input = errorElement.previousElementSibling.querySelector('.form-input') || 
+                  errorElement.previousElementSibling;
+    if (input) input.classList.remove('error');
+}
+
+function showSuccess(elementId, message) {
+    const successElement = document.getElementById(elementId);
+    successElement.textContent = message;
+    successElement.classList.add('show');
+    
+    setTimeout(() => {
+        successElement.classList.remove('show');
+    }, 3000);
+}
+
+// Login Form Handler
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const submitBtn = this.querySelector('.form-btn');
+    
+    // Clear previous errors
+    clearError('loginEmailError');
+    clearError('loginPasswordError');
+    clearError('loginError');
+    
+    let isValid = true;
+    
+    // Validate email
+    if (!email) {
+        showError('loginEmailError', 'Email is required');
+        isValid = false;
+    } else if (!validateEmail(email)) {
+        showError('loginEmailError', 'Please enter a valid email');
+        isValid = false;
+    }
+    
+    // Validate password
+    if (!password) {
+        showError('loginPasswordError', 'Password is required');
+        isValid = false;
+    } else if (password.length < 6) {
+        showError('loginPasswordError', 'Password must be at least 6 characters');
+        isValid = false;
+    }
+    
+    if (isValid) {
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span>Signing In...';
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Sign In';
+            
+            // Show success message
+            showSuccess('loginSuccess', 'Login successful! Redirecting...');
+            
+            // Close modal after success
+            setTimeout(() => {
+                closeModal('loginModal');
+                // Here you would typically redirect to dashboard
+                console.log('Login successful:', { email, password });
+            }, 1500);
+        }, 2000);
+    }
+});
+
+// Register Form Handler
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const phone = document.getElementById('registerPhone').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const agreeTerms = document.getElementById('agreeTerms').checked;
+    const submitBtn = this.querySelector('.form-btn');
+    
+    // Clear previous errors
+    ['registerNameError', 'registerEmailError', 'registerPhoneError', 
+     'registerPasswordError', 'confirmPasswordError', 'registerError'].forEach(clearError);
+    
+    let isValid = true;
+    
+    // Validate name
+    if (!name) {
+        showError('registerNameError', 'Full name is required');
+        isValid = false;
+    }
+    
+    // Validate email
+    if (!email) {
+        showError('registerEmailError', 'Email is required');
+        isValid = false;
+    } else if (!validateEmail(email)) {
+        showError('registerEmailError', 'Please enter a valid email');
+        isValid = false;
+    }
+    
+    // Validate phone
+    if (!phone) {
+        showError('registerPhoneError', 'Mobile number is required');
+        isValid = false;
+    } else if (!validatePhone(phone)) {
+        showError('registerPhoneError', 'Please enter a valid 10-digit mobile number');
+        isValid = false;
+    }
+    
+    // Validate password
+    if (!password) {
+        showError('registerPasswordError', 'Password is required');
+        isValid = false;
+    } else if (password.length < 6) {
+        showError('registerPasswordError', 'Password must be at least 6 characters');
+        isValid = false;
+    }
+    
+    // Validate confirm password
+    if (!confirmPassword) {
+        showError('confirmPasswordError', 'Please confirm your password');
+        isValid = false;
+    } else if (password !== confirmPassword) {
+        showError('confirmPasswordError', 'Passwords do not match');
+        isValid = false;
+    }
+    
+    // Validate terms agreement
+    if (!agreeTerms) {
+        showError('registerError', 'Please agree to the Terms & Conditions');
+        isValid = false;
+    }
+    
+    if (isValid) {
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span>Creating Account...';
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Create Account';
+            
+            // Show success message
+            showSuccess('registerSuccess', 'Account created successfully! Please check your email.');
+            
+            // Switch to login after success
+            setTimeout(() => {
+                switchToLogin();
+            }, 2000);
+            
+            console.log('Registration successful:', { name, email, phone });
+        }, 2000);
+    }
+});
+
+// Social Login
+function socialLogin(provider) {
+    alert(`${provider} login will be implemented here`);
+    // Implement actual social login logic
+}
+
+// Forgot Password
+function showForgotPassword() {
+    alert('Forgot password functionality will be implemented here');
+    // Implement forgot password logic
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// Update navbar buttons to open modals
 document.addEventListener('DOMContentLoaded', function() {
-    const loginModal = document.getElementById('loginModal');
-    const registerModal = document.getElementById('registerModal');
-    const loginLink = document.querySelector('a[href="#login"]');
-    const registerLink = document.querySelector('a[href="#register"]');
+    // Find login and register buttons in navbar
+    const loginBtn = document.querySelector('.btn-outline');
+    const registerBtn = document.querySelector('.btn-primary');
     
-    const showLogin = document.getElementById('showLogin');
-    const showRegister = document.getElementById('showRegister');
-    const closeBtns = document.querySelectorAll('.close-modal');
-    
-    // Show login modal
-    loginLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        loginModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    });
-    
-    // Show register modal
-    registerLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        registerModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    });
-    
-    // Switch between modals
-    showRegister.addEventListener('click', function(e) {
-        e.preventDefault();
-        loginModal.style.display = 'none';
-        registerModal.style.display = 'block';
-    });
-    
-    showLogin.addEventListener('click', function(e) {
-        e.preventDefault();
-        registerModal.style.display = 'none';
-        loginModal.style.display = 'block';
-    });
-    
-    // Close modals
-    closeBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            loginModal.style.display = 'none';
-            registerModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('loginModal');
         });
-    });
+    }
     
-    // Close modal when clicking outside
-    window.addEventListener('click', function(e) {
-        if (e.target === loginModal) {
-            loginModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        if (e.target === registerModal) {
-            registerModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-    
-    // Form submissions
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        // Add your login logic here
-        alert('Login functionality - Connect to your backend!');
-        console.log('Login attempt:', { email, password });
-    });
-    
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const password = formData.get('password');
-        const confirmPassword = formData.get('confirmPassword');
-        
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-        
-        // Add your registration logic here
-        alert('Registration functionality - Connect to your backend!');
-        console.log('Registration attempt:', Object.fromEntries(formData));
-    });
+    if (registerBtn) {
+        registerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('registerModal');
+        });
+    }
 });
 </script>
+</body>
+</html>
