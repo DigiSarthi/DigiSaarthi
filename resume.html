@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+    <link rel="stylesheet" href="resume.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; margin-bottom: 10px; }
+        td { padding: 5px; }
+        label { font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 5px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; margin: 5px; }
+        button:hover { background-color: #45a049; }
+        h1, h2 { color: #333; }
+        .photo-preview { max-width: 150px; max-height: 200px; border: 1px solid #ccc; margin: 10px 0; }
+        #resumeContent { border: 1px solid #ccc; padding: 20px; background-color: #f9f9f9; }
+        .skills-section { display: flex; flex-wrap: wrap; gap: 15px; margin: 10px 0; }
+        .skill-checkbox { margin-right: 15px; }
+    </style>
+</head>
+<body>
+    <div id="formSection">
+        <h1>Resume Builder</h1>
+        
+        <form id="resumeForm">
+            <h2>Personal Information</h2>
+            <table>
+                <tr>
+                    <td><label for="fullName">Full Name *:</label></td>
+                    <td><input type="text" id="fullName" name="fullName" required></td>
+                </tr>
+                <tr>
+                    <td><label for="photo">Upload Photo:</label></td>
+                    <td>
+                        <input type="file" id="photo" name="photo" accept="image/*" onchange="previewPhoto(this)">
+                        <div id="photoPreview"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="mobile">Mobile Number:</label></td>
+                    <td><input type="tel" id="mobile" name="mobile"></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email Address:</label></td>
+                    <td><input type="email" id="email" name="email"></td>
+                </tr>
+                <tr>
+                    <td><label for="objective">Job Objective:</label></td>
+                    <td><textarea id="objective" name="objective" rows="3" cols="50"></textarea></td>
+                </tr>
+            </table>
+
+            <h2>Personal Details</h2>
+            <table>
+                <tr>
+                    <td><label for="fatherName">Father's Name:</label></td>
+                    <td><input type="text" id="fatherName" name="fatherName"></td>
+                </tr>
+                <tr>
+                    <td><label for="motherName">Mother's Name:</label></td>
+                    <td><input type="text" id="motherName" name="motherName"></td>
+                </tr>
+                <tr>
+                    <td><label for="dob">Date of Birth:</label></td>
+                    <td><input type="date" id="dob" name="dob"></td>
+                </tr>
+                <tr>
+                    <td><label for="gender">Gender:</label></td>
+                    <td>
+                        <select id="gender" name="gender">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="nationality">Nationality:</label></td>
+                    <td><input type="text" id="nationality" name="nationality"></td>
+                </tr>
+                <tr>
+                    <td><label for="religion">Religion:</label></td>
+                    <td><input type="text" id="religion" name="religion"></td>
+                </tr>
+            </table>
+
+            <h2>Education</h2>
+            <div id="educationContainer">
+                <div class="education-entry">
+                    <table>
+                        <tr>
+                            <td><label>Qualification:</label></td>
+                            <td><input type="text" name="qualification[]"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Board/University:</label></td>
+                            <td><input type="text" name="board[]"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Year:</label></td>
+                            <td><input type="number" name="year[]" min="1950" max="2030"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Percentage/Grade:</label></td>
+                            <td><input type="text" name="percentage[]"></td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
+            </div>
+            <button type="button" onclick="addEducation()">Add More Education</button>
+
+            <h2>Other Qualifications</h2>
+            <textarea id="otherQualifications" name="otherQualifications" rows="3" cols="50" placeholder="Enter other qualifications, certifications, etc."></textarea>
+
+            <h2>Technical Skills</h2>
+            <div class="skills-section">
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="html" name="skills" value="HTML">
+                    <label for="html">HTML</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="css" name="skills" value="CSS">
+                    <label for="css">CSS</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="javascript" name="skills" value="JavaScript">
+                    <label for="javascript">JavaScript</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="python" name="skills" value="Python">
+                    <label for="python">Python</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="java" name="skills" value="Java">
+                    <label for="java">Java</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="sql" name="skills" value="SQL">
+                    <label for="sql">SQL</label>
+                </div>
+            </div>
+
+            <h3>MS Office & Computer Skills</h3>
+            <div class="skills-section">
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="msword" name="skills" value="MS Word">
+                    <label for="msword">MS Word</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="msexcel" name="skills" value="MS Excel">
+                    <label for="msexcel">MS Excel</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="mspowerpoint" name="skills" value="MS PowerPoint">
+                    <label for="mspowerpoint">MS PowerPoint</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="msoffice" name="skills" value="Proficient in MS Office Suite">
+                    <label for="msoffice">MS Office Suite</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="internet" name="skills" value="Internet browsing and email communication">
+                    <label for="internet">Internet & Email</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="pdf" name="skills" value="PDF management">
+                    <label for="pdf">PDF Management</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="documentation" name="skills" value="Digital documentation, scanning, printing">
+                    <label for="documentation">Digital Documentation</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="forms" name="skills" value="Online form submissions and portal operations">
+                    <label for="forms">Online Forms & Portals</label>
+                </div>
+                <div class="skill-checkbox">
+                    <input type="checkbox" id="typing" name="skills" value="Typing skills in English and Odia">
+                    <label for="typing">Typing (English & Odia)</label>
+                </div>
+            </div>
+
+            <br>
+            <label for="customSkills">Other Skills (comma separated):</label>
+            <input type="text" id="customSkills" name="customSkills" placeholder="React, Node.js, MongoDB, etc.">
+
+            <h2>Work Experience</h2>
+            <div id="experienceContainer">
+                <div class="experience-entry">
+                    <table>
+                        <tr>
+                            <td><label>Job Title:</label></td>
+                            <td><input type="text" name="jobTitle[]"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Organization:</label></td>
+                            <td><input type="text" name="organization[]"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Duration:</label></td>
+                            <td><input type="text" name="duration[]" placeholder="e.g., Jan 2020 - Dec 2022"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Responsibilities:</label></td>
+                            <td><textarea name="responsibilities[]" rows="3" cols="50"></textarea></td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
+            </div>
+            <button type="button" onclick="addExperience()">Add More Experience</button>
+
+            <h2>Languages Known</h2>
+            <input type="text" id="languages" name="languages" placeholder="English, Hindi, Spanish, etc.">
+
+            <h2>Hobbies</h2>
+            <input type="text" id="hobbies" name="hobbies" placeholder="Reading, Swimming, Photography, etc.">
+
+            <h2>Address</h2>
+            <textarea id="address" name="address" rows="3" cols="50" placeholder="Enter your permanent address"></textarea>
+
+            <h2>Declaration</h2>
+            <input type="checkbox" id="includeDeclaration" name="includeDeclaration">
+            <label for="includeDeclaration">Include Declaration</label>
+
+            <h2>Signature</h2>
+            <input type="text" id="signature" name="signature" placeholder="Your Name">
+
+            <br><br>
+            <button type="submit">Generate Resume</button>
+        </form>
+    </div>
+
+    <div id="resumeSection" style="display: none;">
+        <button onclick="printResume()">Print Resume</button>
+        <button onclick="editResume()">Edit Resume</button>
+        <hr>
+        <div id="resumeContent"></div>
+    </div>
+
+    <script>
+        let photoDataUrl = '';
+
+        function previewPhoto(input) {
+            const preview = document.getElementById('photoPreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoDataUrl = e.target.result;
+                    preview.innerHTML = `<img src="${photoDataUrl}" class="photo-preview" alt="Photo Preview">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function addEducation() {
+            const container = document.getElementById('educationContainer');
+            const div = document.createElement('div');
+            div.className = 'education-entry';
+            div.innerHTML = `
+                <table>
+                    <tr>
+                        <td><label>Qualification:</label></td>
+                        <td><input type="text" name="qualification[]"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Board/University:</label></td>
+                        <td><input type="text" name="board[]"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Year:</label></td>
+                        <td><input type="number" name="year[]" min="1950" max="2030"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Percentage/Grade:</label></td>
+                        <td><input type="text" name="percentage[]"></td>
+                    </tr>
+                </table>
+                <button type="button" onclick="removeEducation(this)">Remove</button>
+                <hr>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeEducation(button) {
+            button.parentElement.remove();
+        }
+
+        function addExperience() {
+            const container = document.getElementById('experienceContainer');
+            const div = document.createElement('div');
+            div.className = 'experience-entry';
+            div.innerHTML = `
+                <table>
+                    <tr>
+                        <td><label>Job Title:</label></td>
+                        <td><input type="text" name="jobTitle[]"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Organization:</label></td>
+                        <td><input type="text" name="organization[]"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Duration:</label></td>
+                        <td><input type="text" name="duration[]" placeholder="e.g., Jan 2020 - Dec 2022"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Responsibilities:</label></td>
+                        <td><textarea name="responsibilities[]" rows="3" cols="50"></textarea></td>
+                    </tr>
+                </table>
+                <button type="button" onclick="removeExperience(this)">Remove</button>
+                <hr>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeExperience(button) {
+            button.parentElement.remove();
+        }
+
+        document.getElementById('resumeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateResume();
+        });
+
+        function generateResume() {
+            const formData = new FormData(document.getElementById('resumeForm'));
+            let resume = '';
+
+            // Header with photo
+            const fullName = formData.get('fullName');
+            const mobile = formData.get('mobile');
+            const email = formData.get('email');
+
+            if (photoDataUrl) {
+                resume += `<div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div style="flex: 1;">
+                        <h1>${fullName}</h1>`;
+                
+                let contactInfo = [];
+                if (mobile) contactInfo.push(`Mobile: ${mobile}`);
+                if (email) contactInfo.push(`Email: ${email}`);
+                
+                if (contactInfo.length > 0) {
+                    resume += `<p>${contactInfo.join(' | ')}</p>`;
+                }
+                
+                resume += `</div>
+                    <div style="margin-left: 20px;">
+                        <img src="${photoDataUrl}" style="width: 120px; height: 150px; object-fit: cover; border: 2px solid #333;">
+                    </div>
+                </div>`;
+            } else {
+                resume += `<h1 align="center">${fullName}</h1>`;
+                
+                let contactInfo = [];
+                if (mobile) contactInfo.push(`Mobile: ${mobile}`);
+                if (email) contactInfo.push(`Email: ${email}`);
+                
+                if (contactInfo.length > 0) {
+                    resume += `<p align="center">${contactInfo.join(' | ')}</p>`;
+                }
+            }
+
+            // Objective
+            const objective = formData.get('objective');
+            if (objective) {
+                resume += `<h2>OBJECTIVE</h2><p>${objective}</p>`;
+            }
+
+            // Personal Details
+            const personalDetails = [];
+            const fatherName = formData.get('fatherName');
+            const motherName = formData.get('motherName');
+            const dob = formData.get('dob');
+            const gender = formData.get('gender');
+            const nationality = formData.get('nationality');
+            const religion = formData.get('religion');
+
+            if (fatherName) personalDetails.push(`Father's Name: ${fatherName}`);
+            if (motherName) personalDetails.push(`Mother's Name: ${motherName}`);
+            if (dob) personalDetails.push(`Date of Birth: ${dob}`);
+            if (gender) personalDetails.push(`Gender: ${gender}`);
+            if (nationality) personalDetails.push(`Nationality: ${nationality}`);
+            if (religion) personalDetails.push(`Religion: ${religion}`);
+
+            if (personalDetails.length > 0) {
+                resume += `<h2>PERSONAL DETAILS</h2>`;
+                personalDetails.forEach(detail => {
+                    resume += `<p>${detail}</p>`;
+                });
+            }
+
+            // Education
+            const qualifications = formData.getAll('qualification[]');
+            const boards = formData.getAll('board[]');
+            const years = formData.getAll('year[]');
+            const percentages = formData.getAll('percentage[]');
+
+            let hasEducation = false;
+            for (let i = 0; i < qualifications.length; i++) {
+                if (qualifications[i] || boards[i] || years[i] || percentages[i]) {
+                    hasEducation = true;
+                    break;
+                }
+            }
+
+            if (hasEducation) {
+                resume += `<h2>EDUCATION</h2>`;
+                resume += `<table border="1" cellpadding="5" cellspacing="0" width="100%">
+                    <tr>
+                        <th>Qualification</th>
+                        <th>Board/University</th>
+                        <th>Year</th>
+                        <th>Percentage/Grade</th>
+                    </tr>`;
+                
+                for (let i = 0; i < qualifications.length; i++) {
+                    if (qualifications[i] || boards[i] || years[i] || percentages[i]) {
+                        resume += `<tr>
+                            <td>${qualifications[i] || ''}</td>
+                            <td>${boards[i] || ''}</td>
+                            <td>${years[i] || ''}</td>
+                            <td>${percentages[i] || ''}</td>
+                        </tr>`;
+                    }
+                }
+                resume += `</table>`;
+            }
+
+            // Other Qualifications
+            const otherQualifications = formData.get('otherQualifications');
+            if (otherQualifications) {
+                resume += `<h2>OTHER QUALIFICATIONS</h2><p>${otherQualifications}</p>`;
+            }
+
+            // Technical Skills
+            const selectedSkills = formData.getAll('skills');
+            const customSkills = formData.get('customSkills');
+            let allSkills = [...selectedSkills];
+            
+            if (customSkills) {
+                const customSkillsArray = customSkills.split(',').map(skill => skill.trim()).filter(skill => skill);
+                allSkills = allSkills.concat(customSkillsArray);
+            }
+
+            if (allSkills.length > 0) {
+                resume += `<h2>TECHNICAL SKILLS</h2><ul>`;
+                allSkills.forEach(skill => {
+                    resume += `<li>${skill}</li>`;
+                });
+                resume += `</ul>`;
+            }
+
+            // Work Experience
+            const jobTitles = formData.getAll('jobTitle[]');
+            const organizations = formData.getAll('organization[]');
+            const durations = formData.getAll('duration[]');
+            const responsibilities = formData.getAll('responsibilities[]');
+
+            let hasExperience = false;
+            for (let i = 0; i < jobTitles.length; i++) {
+                if (jobTitles[i] || organizations[i] || durations[i] || responsibilities[i]) {
+                    hasExperience = true;
+                    break;
+                }
+            }
+
+            if (hasExperience) {
+                resume += `<h2>WORK EXPERIENCE</h2>`;
+                for (let i = 0; i < jobTitles.length; i++) {
+                    if (jobTitles[i] || organizations[i] || durations[i] || responsibilities[i]) {
+                        resume += `<h3>${jobTitles[i] || 'Position'} - ${organizations[i] || 'Organization'}</h3>`;
+                        if (durations[i]) resume += `<p><strong>Duration:</strong> ${durations[i]}</p>`;
+                        if (responsibilities[i]) resume += `<p><strong>Responsibilities:</strong> ${responsibilities[i]}</p>`;
+                        resume += `<br>`;
+                    }
+                }
+            }
+
+            // Languages
+            const languages = formData.get('languages');
+            if (languages) {
+                resume += `<h2>LANGUAGES KNOWN</h2><p>${languages}</p>`;
+            }
+
+            // Hobbies
+            const hobbies = formData.get('hobbies');
+            if (hobbies) {
+                resume += `<h2>HOBBIES</h2><p>${hobbies}</p>`;
+            }
+
+            // Address
+            const address = formData.get('address');
+            if (address) {
+                resume += `<h2>PERMANENT ADDRESS</h2><p>${address}</p>`;
+            }
+
+            // Declaration
+            const includeDeclaration = formData.get('includeDeclaration');
+            if (includeDeclaration) {
+                resume += `<h2>DECLARATION</h2><p>I hereby declare that all the information provided above is true and correct to the best of my knowledge.</p>`;
+            }
+
+            // Signature
+            const signature = formData.get('signature');
+            if (signature) {
+                resume += `<br><br><p align="right">Signature: ${signature}</p>`;
+            }
+
+            document.getElementById('resumeContent').innerHTML = resume;
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('resumeSection').style.display = 'block';
+        }
+
+        function printResume() {
+            const printWindow = window.open('', '_blank');
+            const resumeContent = document.getElementById('resumeContent').innerHTML;
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Resume</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        h1 { text-align: center; }
+                        h2 { border-bottom: 1px solid #000; padding-bottom: 2px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+                        th { background-color: #f0f0f0; }
+                        ul { margin: 10px 0; }
+                        li { margin: 5px 0; }
+                        @media print { 
+                            body { margin: 0; }
+                            @page { margin: 0.5in; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${resumeContent}
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+
+        function editResume() {
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('resumeSection').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
