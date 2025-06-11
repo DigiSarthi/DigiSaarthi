@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPG to PDF Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: linear-gradient(45deg, #f8f9ff, #fff);
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: linear-gradient(45deg, #f0f2ff, #f8f9ff);
+            transform: translateY(-2px);
+        }
+
+        .upload-area.drag-over {
+            border-color: #28a745;
+            background: linear-gradient(45deg, #f0fff4, #f8fff9);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .upload-subtext {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .images-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .image-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: move;
+            position: relative;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .image-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .image-info {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .image-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+        }
+
+        .drag-handle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            cursor: move;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-message {
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .upload-area {
+                padding: 40px 15px;
+            }
+
+            .images-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 JPG to PDF Converter</h1>
+            <p>Convert your images to PDF instantly - No server required!</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Drop your JPG images here</div>
+                <div class="upload-subtext">or click to browse files</div>
+                <input type="file" id="fileInput" accept="image/jpeg,image/jpg" multiple>
+            </div>
+
+            <!-- Status Messages -->
+            <div class="status-message" id="statusMessage"></div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div style="text-align: center; margin-top: 10px; color: #666;">
+                    <span id="progressText">Processing...</span>
+                </div>
+            </div>
+
+            <!-- Images Container -->
+            <div class="images-container" id="imagesContainer"></div>
+            <div class="empty-state" id="emptyState">
+                No images uploaded yet. Upload some JPG images to get started!
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button class="btn" id="clearAllBtn" style="background: #ff4757;">Clear All</button>
+                <button class="btn" id="convertBtn" disabled>Convert to PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class JPGToPDFConverter {
+            constructor() {
+                this.images = [];
+                this.draggedElement = null;
+                this.initializeElements();
+                this.bindEvents();
+                this.updateUI();
+            }
+
+            initializeElements() {
+                this.uploadArea = document.getElementById('uploadArea');
+                this.fileInput = document.getElementById('fileInput');
+                this.imagesContainer = document.getElementById('imagesContainer');
+                this.convertBtn = document.getElementById('convertBtn');
+                this.clearAllBtn = document.getElementById('clearAllBtn');
+                this.statusMessage = document.getElementById('statusMessage');
+                this.progressContainer = document.getElementById('progressContainer');
+                this.progressFill = document.getElementById('progressFill');
+                this.progressText = document.getElementById('progressText');
+                this.emptyState = document.getElementById('emptyState');
+            }
+
+            bindEvents() {
+                // Upload area events
+                this.uploadArea.addEventListener('click', () => this.fileInput.click());
+                this.fileInput.addEventListener('change', (e) => this.handleFiles(e.target.files));
+
+                // Drag and drop events
+                this.uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));
+                this.uploadArea.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                this.uploadArea.addEventListener('drop', this.handleDrop.bind(this));
+
+                // Button events
+                this.convertBtn.addEventListener('click', this.convertToPDF.bind(this));
+                this.clearAllBtn.addEventListener('click', this.clearAll.bind(this));
+
+                // Container drag events for reordering
+                this.imagesContainer.addEventListener('dragstart', this.handleImageDragStart.bind(this));
+                this.imagesContainer.addEventListener('dragover', this.handleImageDragOver.bind(this));
+                this.imagesContainer.addEventListener('drop', this.handleImageDrop.bind(this));
+                this.imagesContainer.addEventListener('dragend', this.handleImageDragEnd.bind(this));
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                this.uploadArea.classList.add('drag-over');
+            }
+
+            handleDragLeave(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('drag-over');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('drag-over');
+                const files = Array.from(e.dataTransfer.files).filter(file => 
+                    file.type === 'image/jpeg' || file.type === 'image/jpg'
+                );
+                this.handleFiles(files);
+            }
+
+            async handleFiles(files) {
+                if (files.length === 0) {
+                    this.showStatus('Please select JPG images only.', 'error');
+                    return;
+                }
+
+                const validFiles = Array.from(files).filter(file => 
+                    file.type === 'image/jpeg' || file.type === 'image/jpg'
+                );
+
+                if (validFiles.length !== files.length) {
+                    this.showStatus('Some files were skipped. Only JPG images are supported.', 'error');
+                }
+
+                for (const file of validFiles) {
+                    try {
+                        const imageData = await this.processImage(file);
+                        this.images.push(imageData);
+                    } catch (error) {
+                        console.error('Error processing image:', error);
+                        this.showStatus(`Error processing ${file.name}`, 'error');
+                    }
+                }
+
+                this.updateUI();
+                this.fileInput.value = ''; // Reset input
+            }
+
+            processImage(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            resolve({
+                                id: Date.now() + Math.random(),
+                                file: file,
+                                dataUrl: e.target.result,
+                                name: file.name,
+                                size: file.size,
+                                width: img.width,
+                                height: img.height
+                            });
+                        };
+                        img.onerror = reject;
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            updateUI() {
+                this.renderImages();
+                this.convertBtn.disabled = this.images.length === 0;
+                this.clearAllBtn.style.display = this.images.length === 0 ? 'none' : 'inline-block';
+                this.emptyState.style.display = this.images.length === 0 ? 'block' : 'none';
+            }
+
+            renderImages() {
+                this.imagesContainer.innerHTML = '';
+                
+                this.images.forEach((image, index) => {
+                    const imageElement = this.createImageElement(image, index);
+                    this.imagesContainer.appendChild(imageElement);
+                });
+            }
+
+            createImageElement(image, index) {
+                const div = document.createElement('div');
+                div.className = 'image-item';
+                div.draggable = true;
+                div.dataset.imageId = image.id;
+                
+                div.innerHTML = `
+                    <div class="drag-handle">⋮⋮</div>
+                    <button class="remove-btn" onclick="converter.removeImage('${image.id}')">&times;</button>
+                    <img class="image-preview" src="${image.dataUrl}" alt="${image.name}">
+                    <div class="image-info">
+                        <div class="image-name">${image.name}</div>
+                        <div>${this.formatFileSize(image.size)} • ${image.width}×${image.height}</div>
+                    </div>
+                `;
+
+                return div;
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Image reordering methods
+            handleImageDragStart(e) {
+                if (e.target.classList.contains('image-item')) {
+                    this.draggedElement = e.target;
+                    e.target.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                }
+            }
+
+            handleImageDragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                
+                const afterElement = this.getDragAfterElement(this.imagesContainer, e.clientY);
+                if (afterElement == null) {
+                    this.imagesContainer.appendChild(this.draggedElement);
+                } else {
+                    this.imagesContainer.insertBefore(this.draggedElement, afterElement);
+                }
+            }
+
+            handleImageDrop(e) {
+                e.preventDefault();
+                this.reorderImages();
+            }
+
+            handleImageDragEnd(e) {
+                if (e.target.classList.contains('image-item')) {
+                    e.target.classList.remove('dragging');
+                    this.draggedElement = null;
+                }
+            }
+
+            getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.image-item:not(.dragging)')];
+                
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            reorderImages() {
+                const imageElements = [...this.imagesContainer.querySelectorAll('.image-item')];
+                const newOrder = imageElements.map(el => el.dataset.imageId);
+                
+                this.images.sort((a, b) => {
+                    return newOrder.indexOf(a.id.toString()) - newOrder.indexOf(b.id.toString());
+                });
+            }
+
+            removeImage(imageId) {
+                this.images = this.images.filter(img => img.id.toString() !== imageId);
+                this.updateUI();
+                this.showStatus('Image removed successfully.', 'success');
+            }
+
+            clearAll() {
+                this.images = [];
+                this.updateUI();
+                this.showStatus('All images cleared.', 'success');
+            }
+
+            async convertToPDF() {
+                if (this.images.length === 0) {
+                    this.showStatus('Please upload at least one image.', 'error');
+                    return;
+                }
+
+                try {
+                    this.showProgress(true);
+                    this.convertBtn.disabled = true;
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF();
+                    
+                    for (let i = 0; i < this.images.length; i++) {
+                        const image = this.images[i];
+                        
+                        // Update progress
+                        const progress = ((i + 1) / this.images.length) * 100;
+                        this.updateProgress(progress, `Processing image ${i + 1} of ${this.images.length}...`);
+                        
+                        // Add new page for subsequent images
+                        if (i > 0) {
+                            pdf.addPage();
+                        }
+
+                        // Get PDF page dimensions
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const pageHeight = pdf.internal.pageSize.getHeight();
+                        const margin = 20;
+                        const maxWidth = pageWidth - (margin * 2);
+                        const maxHeight = pageHeight - (margin * 2);
+
+                        // Calculate scaled dimensions maintaining aspect ratio
+                        const imageAspectRatio = image.width / image.height;
+                        let scaledWidth, scaledHeight;
+
+                        if (imageAspectRatio > maxWidth / maxHeight) {
+                            // Image is wider relative to the page
+                            scaledWidth = maxWidth;
+                            scaledHeight = maxWidth / imageAspectRatio;
+                        } else {
+                            // Image is taller relative to the page
+                            scaledHeight = maxHeight;
+                            scaledWidth = maxHeight * imageAspectRatio;
+                        }
+
+                        // Center the image on the page
+                        const x = (pageWidth - scaledWidth) / 2;
+                        const y = (pageHeight - scaledHeight) / 2;
+
+                        // Add image to PDF
+                        pdf.addImage(image.dataUrl, 'JPEG', x, y, scaledWidth, scaledHeight);
+                        
+                        // Small delay to keep UI responsive
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+
+                    // Generate filename with timestamp
+                    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                    const filename = `converted-images-${timestamp}.pdf`;
+
+                    // Save PDF
+                    pdf.save(filename);
+
+                    this.showStatus(`PDF created successfully! Downloaded as ${filename}`, 'success');
+                    
+                } catch (error) {
+                    console.error('Error creating PDF:', error);
+                    this.showStatus('Error creating PDF. Please try again.', 'error');
+                } finally {
+                    this.showProgress(false);
+                    this.convertBtn.disabled = false;
+                }
+            }
+
+            showProgress(show) {
+                this.progressContainer.style.display = show ? 'block' : 'none';
+                if (!show) {
+                    this.updateProgress(0, '');
+                }
+            }
+
+            updateProgress(percentage, text) {
+                this.progressFill.style.width = `${percentage}%`;
+                this.progressText.textContent = text;
+            }
+
+            showStatus(message, type) {
+                this.statusMessage.textContent = message;
+                this.statusMessage.className = `status-message status-${type}`;
+                this.statusMessage.style.display = 'block';
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    this.statusMessage.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Initialize the converter when page loads
+        let converter;
+        document.addEventListener('DOMContentLoaded', () => {
+            converter = new JPGToPDFConverter();
+        });
+    </script>
+</body>
+</html>
