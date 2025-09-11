@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government ID Card Generator</title>
+    
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    
+    <style>
+        /* Government Website Professional Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            background: #f8f9fa;
+            color: #495057;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 20px;
+            margin: -30px -30px 25px -30px;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 2px solid #dee2e6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+            display: inline-block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .required::after {
+            content: ' *';
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-group input[type="file"] {
+            padding: 8px;
+            background: #f8f9fa;
+            border-style: dashed;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group textarea[readonly] {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .action-buttons h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 0 10px 10px 0;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            min-width: 160px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .preview-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+            display: none;
+        }
+
+        .preview-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .preview-section h3 {
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        #previewCanvas {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        .resolution-info {
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: #e8f6f3;
+            border: 1px solid #a7e6d7;
+            border-radius: 4px;
+            color: #0e6655;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #0c5460;
+        }
+
+        .info-box h4 {
+            margin-bottom: 8px;
+            color: #0a4a56;
+        }
+
+        .footer {
+            background: #34495e;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .section-title {
+                margin: -20px -20px 20px -20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px 0;
+                width: 100%;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .header, .form-container, .action-buttons, .footer {
+                display: none;
+            }
+            
+            .preview-section {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+    </style>
+
+    <script type="text/javascript">
+        google.load("elements", "1", { packages: "transliteration" });
+        function onLoad() {
+            var options = {
+                sourceLanguage: 'en',
+                destinationLanguage: ['or'],
+                shortcutKey: 'ctrl+g',
+                transliterationEnabled: true
+            };
+            const control = new google.elements.transliteration.TransliterationControl(options);
+            
+            const localFieldIds = [
+                'local_name_lower', 
+                'local_name_upper',
+                'local_co_upper', 
+                'local_stc', 
+                'local_po', 
+                'local_district', 
+                'local_state'
+            ];
+            control.makeTransliteratable(localFieldIds);
+        }
+        google.setOnLoadCallback(onLoad);
+    </script>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <h1>Manual Aadhaar Card Generate</h1>
+            <p>This is a fake aadhar card | Do not use it for any Government Purpose</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="info-box">
+            <h4>Instructions for Card Generation</h4>
+            <p>Please fill all the required fields marked with (*) symbol. After completing the form, click "Generate Preview" to render your card. You can then download the final card as a JPG file.</p>
+        </div>
+
+        <div class="form-container">
+            <div class="section-title">Personal Information & Card Details</div>
+            
+            <div class="form-section">
+                <h3>Upper Section Details</h3>
+                <div class="form-grid" id="upper-block-form"></div>
+            </div>
+
+            <div class="form-section">
+                <h3>Middle Section</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="aadhaar_middle" class="required">Aadhaar Number (Middle Section)</label>
+                        <input type="text" id="aadhaar_middle" value="" maxlength="12" placeholder="Enter 12-digit Aadhaar number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="photo_file" class="required">Upload Photo</label>
+                        <input type="file" id="photo_file" accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Lower Section Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name_lower" class="required">Name (English)</label>
+                        <input type="text" id="name_lower" value="" placeholder="Enter full name in English">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="local_name_lower">Local Name (Odia)</label>
+                        <input type="text" id="local_name_lower" value="" placeholder="Type in English, will convert to Odia">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dob" class="required">Date of Birth</label>
+                        <input type="text" id="dob" value="" placeholder="DD/MM/YYYY">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender" class="required">Gender</label>
+                        <select id="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Bottom Section</h3>
+                <div class="form-group">
+                    <label for="aadhaar_bottom" class="required">Aadhaar Number (Bottom Section)</label>
+                    <input type="text" id="aadhaar_bottom" value="" maxlength="12" placeholder="Enter 12-digit Aadhaar number">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Address Information (Auto-Generated)</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="full_address">Full Address (English)</label>
+                        <textarea id="full_address" rows="4" readonly></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="full_address_local">Full Address (Odia)</label>
+                        <textarea id="full_address_local" rows="4" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <h3>Card Generation Actions</h3>
+            <button id="renderBtn" class="btn btn-primary">🔄 Generate Preview</button>
+            <button id="downloadBtn" class="btn btn-success">💾 Download JPG</button>
+        </div>
+
+        <div class="preview-section" id="previewSection">
+            <h3>📋 Card Preview</h3>
+            <canvas id="previewCanvas"></canvas>
+            <div id="resolution-info" class="resolution-info">Loading template...</div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Government ID Card Generator | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const canvas = document.getElementById('previewCanvas');
+            const ctx = canvas.getContext('2d');
+            const renderBtn = document.getElementById('renderBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const photoInput = document.getElementById('photo_file');
+            const resolutionInfo = document.getElementById('resolution-info');
+            const upperBlockForm = document.getElementById('upper-block-form');
+            const previewSection = document.getElementById('previewSection');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            // --- Configuration ---
+            const templateSrc = 'template.jpg';
+            const templateImage = new Image();
+            let uploadedPhoto = null;
+            
+            // === QR Code object initialized once here ===
+            let qr = null;
+            try {
+                qr = new QRious({
+                    level: 'M',
+                    size: 400,
+                    padding: 10
+                });
+            } catch(e) {
+                console.error("QRious library failed to initialize. Is it loaded correctly?", e);
+                alert("Could not initialize QR Code Generator. The library might be blocked or failed to load.");
+            }
+
+            const startY = 1195;
+            const yGap = 40;
+
+            const upperBlockFields = [
+                { id: 'name_upper', label: 'Full Name *', value: '' },
+                { id: 'local_name_upper', label: 'Local Name', value: '' },
+                { id: 'co_upper', label: 'C/o *', value: '' },
+                { id: 'local_co_upper', label: 'Local C/o (ମରଫଟ)', value: '' },
+                { id: 'stc', label: 'VTC *', value: '' },
+                { id: 'local_stc', label: 'Local VTC', value: '' },
+                { id: 'po', label: 'PO *', value: '' },
+                { id: 'local_po', label: 'Local PO', value: '' },
+                { id: 'subdistrict', label: 'Sub District', value: '' },
+                { id: 'district', label: 'District *', value: '' },
+                { id: 'local_district', label: 'Local District', value: '' },
+                { id: 'state', label: 'State *', value: '' },
+                { id: 'local_state', label: 'Local State', value: '' },
+                { id: 'pincode', label: 'PIN Code *', value: '' },
+                { id: 'mobile', label: 'Mobile Number', value: '' },
+            ];
+
+            const otherTextFields = {
+                aadhaar_middle: { x: 502, y: 2140, font: "bold 60px 'MS Serif', serif" },
+                name_lower: { x: 522, y: 2522, font: "32px 'MS Serif', serif" },
+                local_name_lower: { x: 522, y: 2480, font: "32px 'MS Serif', serif" },
+                dob: { x: 522, y: 2564, font: "32px 'MS Serif', serif" },
+                gender: { x: 522, y: 2606, font: "32px 'MS Serif', serif" },
+                aadhaar_bottom: { x: 511, y: 2880, font: "bold 55px Arial, sans-serif" },
+            };
+
+            const backAddressConfig = {
+                x: 1312, 
+                y: 2620,
+                font: "32px 'MS Serif', serif",
+                lineHeight: 40 
+            };
+            
+            const backAddressLocalConfig = {
+                x: 1312, 
+                y: 2450,
+                font: "32px 'MS Serif', serif",
+                lineHeight: 40 
+            };
+
+            // --- Show loading overlay ---
+            function showLoading() {
+                loadingOverlay.style.display = 'flex';
+            }
+
+            function hideLoading() {
+                loadingOverlay.style.display = 'none';
+            }
+
+            // --- Initialization ---
+            upperBlockFields.forEach(field => {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+                const label = document.createElement('label');
+                label.htmlFor = field.id;
+                label.textContent = field.label;
+                if (field.label.includes('*')) {
+                    label.className = 'required';
+                    label.textContent = field.label.replace(' *', '');
+                }
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = field.id;
+                input.value = field.value;
+                input.placeholder = `Enter ${field.label.replace(' *', '')}`;
+                group.appendChild(label);
+                group.appendChild(input);
+                upperBlockForm.appendChild(group);
+            });
+            
+            function syncInputs(input1, input2) {
+                input1.addEventListener('input', () => { input2.value = input1.value; });
+                input2.addEventListener('input', () => { input1.value = input2.value; });
+            }
+
+            const nameUpper = document.getElementById('name_upper');
+            const nameLower = document.getElementById('name_lower');
+            const localNameUpper = document.getElementById('local_name_upper');
+            const localNameLower = document.getElementById('local_name_lower');
+            const aadhaarMiddle = document.getElementById('aadhaar_middle');
+            const aadhaarBottom = document.getElementById('aadhaar_bottom');
+
+            syncInputs(nameUpper, nameLower);
+            syncInputs(localNameUpper, localNameLower);
+            syncInputs(aadhaarMiddle, aadhaarBottom);
+            
+            const fullAddressTextarea = document.getElementById('full_address');
+            const fullAddressLocalTextarea = document.getElementById('full_address_local');
+            const addressSourceIds = ['co_upper', 'stc', 'po', 'district', 'state', 'pincode'];
+            const addressLocalSourceIds = ['local_co_upper', 'local_stc', 'local_po', 'local_district', 'local_state', 'pincode'];
+            
+            function updateFullAddress() {
+                const coVal = document.getElementById('co_upper').value;
+                const vtcVal = document.getElementById('stc').value;
+                const poVal = document.getElementById('po').value;
+                const distVal = document.getElementById('district').value;
+                const stateVal = document.getElementById('state').value;
+                const pinVal = document.getElementById('pincode').value;
+                fullAddressTextarea.value = `Address:\nC/o-${coVal}, ${vtcVal}, \nPo:${poVal}, Dist- ${distVal}\n${stateVal}-${pinVal}`;
+            }
+            
+            function updateFullAddressLocal() {
+                const localCoVal = document.getElementById('local_co_upper').value;
+                const vtcVal = document.getElementById('local_stc').value;
+                const poVal = document.getElementById('local_po').value;
+                const distVal = document.getElementById('local_district').value;
+                const stateVal = document.getElementById('local_state').value;
+                const pinVal = document.getElementById('pincode').value;
+                const line1 = `ଠିକଣା:`;
+                const line2 = `ମରଫଟ- ${localCoVal},${vtcVal},Po:${poVal},`;
+                const line3 = `Dist- ${distVal}`;
+                const line4 = `${stateVal}-${pinVal}`;
+                fullAddressLocalTextarea.value = `${line1}\n${line2}\n${line3}\n${line4}`;
+            }
+
+            addressSourceIds.map(id => document.getElementById(id)).forEach(el => el.addEventListener('input', updateFullAddress));
+            addressLocalSourceIds.map(id => document.getElementById(id)).forEach(el => el.addEventListener('input', updateFullAddressLocal));
+
+            templateImage.src = templateSrc;
+            templateImage.onload = () => {
+                canvas.width = templateImage.naturalWidth;
+                canvas.height = templateImage.naturalHeight;
+                resolutionInfo.textContent = `Template Resolution: ${canvas.width} x ${canvas.height} px`;
+                updateFullAddress(); 
+                updateFullAddressLocal();
+                hideLoading();
+            };
+            templateImage.onerror = () => {
+                resolutionInfo.textContent = "Error: template.jpg not found. Please place it in the same folder.";
+                ctx.fillStyle = '#fdd'; ctx.fillRect(0,0,800,500); ctx.fillStyle = 'red';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '20px sans-serif';
+                ctx.fillText('template.jpg not found', 400, 250);
+                hideLoading();
+            };
+
+            renderBtn.addEventListener('click', () => {
+                showLoading();
+                setTimeout(() => {
+                    renderCanvas();
+                    previewSection.classList.add('show');
+                    previewSection.scrollIntoView({ behavior: 'smooth' });
+                    hideLoading();
+                }, 500);
+            });
+
+            downloadBtn.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = 'government-card-export.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
+            });
+
+            photoInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => { uploadedPhoto = img; };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            function formatAadhaar(numberStr) {
+                const cleaned = (numberStr || '').replace(/\s/g, '');
+                if (!cleaned) return '';
+                const match = cleaned.match(/^(\d{4})(\d{4})(\d{4})$/);
+                if (match) return `${match[1]} ${match[2]} ${match[3]}`;
+                return numberStr;
+            }
+
+            function generateQRDataString() {
+                const name = document.getElementById('name_upper').value;
+                const localName = document.getElementById('local_name_upper').value;
+                const aadhaar = document.getElementById('aadhaar_bottom').value;
+                const dob = document.getElementById('dob').value;
+                const genderSel = document.getElementById('gender');
+                const gender = genderSel.options[genderSel.selectedIndex].text;
+                const mobile = document.getElementById('mobile').value;
+                const address = document.getElementById('full_address').value.replace(/\n/g, ' ');
+                const localAddress = document.getElementById('full_address_local').value.replace(/\n/g, ' ');
+
+                let data = `Name: ${name}\n`;
+                data += `Local Name: ${localName}\n`;
+                data += `Aadhaar: ${aadhaar}\n`;
+                data += `DOB: ${dob}\n`;
+                data += `Gender: ${gender}\n`;
+                if(mobile) data += `Mobile: ${mobile}\n`;
+                data += `\nEnglish Address: ${address}\n`;
+                data += `\nLocal Address: ${localAddress}`;
+                
+                return data;
+            }
+
+            function renderCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(templateImage, 0, 0);
+
+                // === QR Code ===
+                const qrData = generateQRDataString();
+                if (qr && qrData) {
+                    try {
+                        qr.value = qrData;
+                        const qrImg = new Image();
+                        qrImg.src = qr.toDataURL("image/png");
+                        qrImg.onload = () => {
+                            ctx.drawImage(qrImg, 797, 1649, 379, 384);   // front side
+                            ctx.drawImage(qrImg, 1902, 2456, 379, 379); // back side
+                        };
+                    } catch (e) {
+                        console.error("QR draw error:", e);
+                    }
+                }
+
+                // === Photo Section ===
+                if (uploadedPhoto) {
+                    drawPhoto(uploadedPhoto);
+                } else {
+                    drawPhotoPlaceholder();
+                }
+
+                // === Upper Block Text ===
+                ctx.fillStyle = 'black';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+
+                const fieldsWithPrefix = ['co_upper', 'stc', 'po', 'subdistrict', 'district', 'state', 'pincode', 'mobile'];
+                let drawIndex = 0; 
+                upperBlockFields.forEach(field => {
+                    const inputValue = document.getElementById(field.id).value;
+                    if (!field.id.startsWith('local_') || field.id === 'local_name_upper') {
+                        let textToDraw = fieldsWithPrefix.includes(field.id) ? `${field.label.replace(' *', '')}: ${inputValue}` : inputValue;
+                        ctx.font = "32px 'MS Serif', serif";
+                        if (inputValue) {
+                            const yPos = startY + (drawIndex * yGap);
+                            ctx.fillText(textToDraw, 340, yPos);
+                            drawIndex++; 
+                        }
+                    }
+                });
+
+                // === Middle / Lower Section Text ===
+                for (const key in otherTextFields) {
+                    const field = otherTextFields[key];
+                    const element = document.getElementById(key);
+                    let textToDraw = '';
+                    if (key === 'dob') {
+                        if (element.value) textToDraw = 'ଜନ୍ମ ତାରିଖ / DOB : ' + element.value;
+                    } else if (key === 'gender') {
+                        if (element.value === 'male') textToDraw = 'ପୁରୁଷ/ Male';
+                        else if (element.value === 'female') textToDraw = 'ସ୍ତ୍ରୀ / Female';
+                    } else {
+                        textToDraw = element.value;
+                        if (key === 'aadhaar_middle' || key === 'aadhaar_bottom') {
+                            textToDraw = formatAadhaar(textToDraw);
+                        }
+                    }
+                    if (textToDraw) {
+                        ctx.font = field.font;
+                        ctx.fillText(textToDraw, field.x, field.y);
+                    }
+                }
+
+                // === Add the second Aadhaar number on the back side ===
+                const aadhaarBottomElement = document.getElementById('aadhaar_bottom');
+                const aadhaarText = formatAadhaar(aadhaarBottomElement.value);
+                if (aadhaarText) {
+                    // Use the same font as the other Aadhaar numbers
+                    ctx.font = "bold 55px Arial, sans-serif"; 
+                    
+                    // New coordinates for the back side of the card (opposite side)
+                    const newX = 1616; 
+                    const newY = 2880; // Same vertical position as the first one
+                    
+                    ctx.fillText(aadhaarText, newX, newY);
+                }
+
+                // === Back Address Local ===
+                const addressLocalText = fullAddressLocalTextarea.value;
+                const addressLocalLines = addressLocalText.split('\n');
+                ctx.font = backAddressLocalConfig.font;
+                addressLocalLines.forEach((line, index) => {
+                    const yPos = backAddressLocalConfig.y + (index * backAddressLocalConfig.lineHeight);
+                    ctx.fillText(line, backAddressLocalConfig.x, yPos);
+                });
+
+                // === Back Address English ===
+                const addressText = fullAddressTextarea.value;
+                const addressLines = addressText.split('\n');
+                ctx.font = backAddressConfig.font;
+                addressLines.forEach((line, index) => {
+                    const yPos = backAddressConfig.y + (index * backAddressConfig.lineHeight);
+                    ctx.fillText(line, backAddressConfig.x, yPos);
+                });
+            }
+
+            function drawPhotoPlaceholder() {
+                const rect = { x: 270, y: 2472, w: 216, h: 266 };
+                ctx.save();
+                ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+                ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+                ctx.setLineDash([]); ctx.font = "bold 18px sans-serif"; ctx.fillStyle = '#888';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText("PHOTO", rect.x + rect.w / 2, rect.y + rect.h / 2);
+                ctx.restore();
+            }
+
+            function drawPhoto(img) {
+                const target = { x: 270, y: 2472, w: 216, h: 266 };
+                const targetAspectRatio = target.w / target.h;
+                const imageAspectRatio = img.width / img.height;
+                let sx, sy, sw, sh;
+                if (imageAspectRatio > targetAspectRatio) {
+                    sw = img.height * targetAspectRatio; sh = img.height;
+                    sx = (img.width - sw) / 2; sy = 0;
+                } else {
+                    sw = img.width; sh = img.width / targetAspectRatio;
+                    sx = 0; sy = (img.height - sh) / 2;
+                }
+                ctx.drawImage(img, sx, sy, sw, sh, target.x, target.y, target.w, target.h);
+            }
+
+            // Initialize loading
+            showLoading();
+        });
+    </script>
+</body>
+</html>
