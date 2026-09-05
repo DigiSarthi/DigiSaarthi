@@ -1,33 +1,34 @@
 /* =========================================================
-   Digi Saarthi — Service Tracking & Verification (Supabase)
+   Digi Saarthi — Service Tracking & Verification
+   =========================================================
+   Records live in Supabase now. This page never lists the full
+   table — it calls the get_service() database function (see
+   setup SQL), which returns at most one matching record. That
+   function is what actually enforces "customers can't browse
+   everyone's data," not anything in this file.
+   See config.js for the Supabase URL/key this file uses.
    ========================================================= */
 
-const SUPABASE_URL = 'https://rimoociqkkcmhisdijsd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbW9vY2lxa2NjbWhpc2RpanNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NzczODgsImV4cCI6MjEwNDE1MzM4OH0.gO0Gglk-oqsSW47mBW_8eGiAmonvLoKyhIhwA8hv_XA';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-async function fetchServiceRecord(serviceNumber) {
-    const { data, error } = await supabase
-        .from('services')
-        .select('*')
-        .eq('service_number', serviceNumber)
-        .maybeSingle();
-
-    if (error) throw error;
-    if (!data) return null;
-
+function fromDbTrack(row) {
     return {
-        serviceNumber: data.service_number,
-        customerName: data.customer_name,
-        serviceType: data.service_type,
-        applicationDate: data.application_date,
-        paymentStatus: data.payment_status,
-        serviceStatus: data.service_status,
-        completionDate: data.completion_date,
-        rejectionReason: data.rejection_reason || '',
-        receiptUrl: data.receipt_url || '',
-        certificateUrl: data.certificate_url || ''
+        serviceNumber: row.service_number,
+        customerName: row.customer_name,
+        serviceType: row.service_type,
+        applicationDate: row.application_date || '',
+        paymentStatus: row.payment_status,
+        serviceStatus: row.service_status,
+        completionDate: row.completion_date || '',
+        rejectionReason: row.rejection_reason || '',
+        receiptUrl: row.receipt_url || '',
+        certificateUrl: row.certificate_url || ''
     };
+}
+
+async function findServiceByNumber(serviceNumber) {
+    const { data, error } = await supabaseClient.rpc('get_service', { p_service_number: serviceNumber });
+    if (error) throw error;
+    if (!data || data.length === 0) return null;
+    return fromDbTrack(data[0]);
 }
 
 function formatDate(isoDate) {
@@ -61,14 +62,14 @@ function buildTimeline(record) {
     ];
 
     const paid = record.paymentStatus === 'Paid';
-    const enteredProcessing = ['Processing', 'Completed', 'Rejected'].includes(record.serviceStatus);
+    const entredProcessing = ['Processing', 'Completed', 'Rejected'].includes(record.serviceStatus);
     const completed = record.serviceStatus === 'Completed';
     const rejected = record.serviceStatus === 'Rejected';
 
     const state = {
         received: 'done',
         payment: paid ? 'done' : 'pending',
-        processing: enteredProcessing ? 'done' : 'pending',
+        processing: entredProcessing ? 'done' : 'pending',
         final: completed ? 'done' : (rejected ? 'rejected' : 'pending')
     };
 
@@ -191,11 +192,10 @@ async function runTrackSearch() {
 
     renderLoading();
     try {
-        const match = await fetchServiceRecord(query);
+        const match = await findServiceByNumber(query);
         if (match) renderResult(match);
         else renderNotFound();
     } catch (err) {
-        console.error(err);
         renderError();
     }
 }
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('trackForm');
     const input = document.getElementById('trackInput');
     const clearBtn = document.getElementById('trackClearBtn');
-    if (!form) return;
+    if (!form) return; // tracking widget not present on this page
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();

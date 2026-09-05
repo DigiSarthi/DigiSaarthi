@@ -1,11 +1,21 @@
 /* =========================================================
-   Digi Saarthi — Admin Panel (Connected to Supabase)
-   ========================================================= */
+   Digi Saarthi — Admin Panel
+   =========================================================
+   HOW THIS WORKS:
 
-const ADMIN_CREDENTIALS = {
-    username: 'admin',
-    password: 'admin'
-};
+   - Records live permanently in a Supabase (Postgres) database.
+     Clicking "Save Service" writes straight to that database —
+     there is no export/download/commit step anymore.
+   - Login uses real Supabase Auth (email + password). Create
+     your admin user once inside the Supabase dashboard under
+     Authentication → Users → Add user.
+   - Row Level Security (set up via the provided SQL) is what
+     actually protects writes: only a logged-in (authenticated)
+     user can add/edit/delete. The public tracking page can only
+     call a narrow search function that returns one record at a
+     time — it can never list all customers.
+   - See config.js for the Supabase URL/key this file uses.
+   ========================================================= */
 
 const SERVICE_TYPES = [
     'Caste Certificate',
@@ -19,97 +29,95 @@ const SERVICE_TYPES = [
     'Other'
 ];
 
-const AUTH_KEY = 'digisaarthi_admin_auth';
-
-/* ============================= SUPABASE CONFIG ============================= */
-const SUPABASE_URL = 'https://rimoociqkkcmhisdijsd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbW9vY2lxa2NjbWhpc2RpanNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NzczODgsImV4cCI6MjEwNDE1MzM4OH0.gO0Gglk-oqsSW47mBW_8eGiAmonvLoKyhIhwA8hv_XA';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ============================= DATA LAYER ============================= */
-async function loadRecords() {
-    try {
-        const { data, error } = await supabase
-            .from('services')
-            .select('*')
-            .order('service_number', { ascending: false });
-
-        if (error) throw error;
-
-        // Map Supabase snake_case columns to app's camelCase variables
-        return (data || []).map(r => ({
-            serviceNumber: r.service_number,
-            customerName: r.customer_name,
-            serviceType: r.service_type,
-            applicationDate: r.application_date,
-            paymentStatus: r.payment_status,
-            serviceStatus: r.service_status,
-            completionDate: r.completion_date,
-            rejectionReason: r.rejection_reason || '',
-            receiptUrl: r.receipt_url || '',
-            certificateUrl: r.certificate_url || ''
-        }));
-    } catch (err) {
-        console.error('Error fetching records:', err);
-        return [];
-    }
+/* ============================= DATA LAYER =============================
+   Everything else in this file only calls these functions, so this is
+   the only place that would need to change if you ever swap databases.
+   ======================================================================= */
+function fromDb(row) {
+    return {
+        serviceNumber: row.service_number,
+        customerName: row.customer_name,
+        serviceType: row.service_type,
+        applicationDate: row.application_date || '',
+        paymentStatus: row.payment_status,
+        serviceStatus: row.service_status,
+        completionDate: row.completion_date || '',
+        rejectionReason: row.rejection_reason || '',
+        receiptUrl: row.receipt_url || '',
+        certificateUrl: row.certificate_url || ''
+    };
 }
 
-async function persistRecord(record) {
-    const payload = {
+function toDb(record) {
+    return {
         service_number: record.serviceNumber,
         customer_name: record.customerName,
         service_type: record.serviceType,
-        application_date: record.applicationDate,
+        application_date: record.applicationDate || null,
         payment_status: record.paymentStatus,
         service_status: record.serviceStatus,
-        completion_date: record.completionDate,
-        rejection_reason: record.rejectionReason,
-        receipt_url: record.receiptUrl,
-        certificate_url: record.certificateUrl
+        completion_date: record.completionDate || null,
+        rejection_reason: record.rejectionReason || null,
+        receipt_url: record.receiptUrl || null,
+        certificate_url: record.certificateUrl || null
     };
+}
 
-    const { error } = await supabase
+async function loadRecords() {
+    const { data, error } = await supabaseClient
         .from('services')
-        .upsert(payload, { onConflict: 'service_number' });
+        .select('*')
+        .order('created_at', { ascending: false });
+    if (error) {
+        alert('Could not load services: ' + error.message);
+        return [];
+    }
+    return data.map(fromDb);
+}
 
+async function upsertRecord(record) {
+    const { error } = await supabaseClient
+        .from('services')
+        .upsert(toDb(record), { onConflict: 'service_number' });
     if (error) throw error;
 }
 
-async function removeRecordFromDB(serviceNumber) {
-    const { error } = await supabase
+async function deleteRecordRemote(serviceNumber) {
+    const { error } = await supabaseClient
         .from('services')
         .delete()
         .eq('service_number', serviceNumber);
-
     if (error) throw error;
 }
 /* ======================================================================= */
 
 let RECORDS = [];
-let EDITING_SERVICE_NUMBER = null;
+let EDITING_SERVICE_NUMBER = null; // null = adding new
 
 /* ---------- Auth ---------- */
-function isLoggedIn() { return sessionStorage.getItem(AUTH_KEY) === 'true'; }
-
-function handleLogin(e) {
-    e.preventDefault();
-
-    const u = document.getElementById('adminUsername').value.trim();
-    const p = document.getElementById('adminPassword').value;
-    const errorEl = document.getElementById('adminLoginError');
-
-    if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
-        sessionStorage.setItem(AUTH_KEY, 'true');
-        showDashboard();
-    } else {
-        errorEl.textContent = 'Incorrect username or password.';
-        errorEl.classList.add('show');
-    }
+async function isLoggedIn() {
+    const { data } = await supabaseClient.auth.getSession();
+    return !!data.session;
 }
 
-function handleLogout() {
-    sessionStorage.removeItem(AUTH_KEY);
+async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('adminUsername').value.trim();
+    const password = document.getElementById('adminPassword').value;
+    const errorEl = document.getElementById('adminLoginError');
+    errorEl.classList.remove('show');
+
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) {
+        errorEl.textContent = 'Incorrect email or password.';
+        errorEl.classList.add('show');
+        return;
+    }
+    showDashboard();
+}
+
+async function handleLogout() {
+    await supabaseClient.auth.signOut();
     location.reload();
 }
 
@@ -232,7 +240,7 @@ function openEditModal(serviceNumber) {
     document.getElementById('formModalTitle').textContent = 'Edit Service';
     resetForm();
     document.getElementById('formServiceNumber').value = record.serviceNumber;
-    document.getElementById('formServiceNumber').readOnly = true;
+    document.getElementById('formServiceNumber').readOnly = true; // service number should not change once issued
     document.getElementById('formCustomerName').value = record.customerName || '';
     document.getElementById('formServiceType').value = record.serviceType || '';
     document.getElementById('formApplicationDate').value = record.applicationDate || '';
@@ -272,11 +280,10 @@ function openViewModal(serviceNumber) {
     openModal('viewServiceModal');
 }
 
-async function handleServiceFormSubmit(e) {
+function handleServiceFormSubmit(e) {
     e.preventDefault();
     const serviceNumber = document.getElementById('formServiceNumber').value.trim().toUpperCase();
     const errorEl = document.getElementById('formError');
-    const submitBtn = document.getElementById('submitServiceBtn');
     errorEl.textContent = '';
 
     if (!/^DS-\d{4}-\d{5}$/.test(serviceNumber)) {
@@ -303,34 +310,31 @@ async function handleServiceFormSubmit(e) {
         certificateUrl: document.getElementById('formCertificateUrl').value.trim()
     };
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving to Database...';
+    const saveBtn = document.querySelector('#serviceForm button[type="submit"]');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
 
-    try {
-        await persistRecord(record);
-        RECORDS = await loadRecords();
-        closeModal('serviceFormModal');
-        renderAll();
-    } catch (err) {
-        errorEl.textContent = 'Error saving to database: ' + (err.message || err);
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Save Service';
-    }
+    upsertRecord(record)
+        .then(async () => {
+            RECORDS = await loadRecords();
+            closeModal('serviceFormModal');
+            renderAll();
+        })
+        .catch(err => { errorEl.textContent = 'Could not save: ' + err.message; })
+        .finally(() => { saveBtn.disabled = false; saveBtn.textContent = 'Save Service'; });
 }
 
-async function deleteRecord(serviceNumber) {
-    if (!confirm(`Permanently delete service ${serviceNumber}? This cannot be undone.`)) return;
-    try {
-        await removeRecordFromDB(serviceNumber);
-        RECORDS = RECORDS.filter(r => r.serviceNumber !== serviceNumber);
-        renderAll();
-    } catch (err) {
-        alert('Could not delete record: ' + (err.message || err));
-    }
+function deleteRecord(serviceNumber) {
+    if (!confirm(`Delete service ${serviceNumber}? This permanently removes it from the database.`)) return;
+    deleteRecordRemote(serviceNumber)
+        .then(async () => {
+            RECORDS = await loadRecords();
+            renderAll();
+        })
+        .catch(err => alert('Could not delete: ' + err.message));
 }
 
-/* ---------- Modal helpers ---------- */
+/* ---------- Modal helpers (shared pattern with rest of site) ---------- */
 function openModal(id) {
     document.getElementById(id).classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -341,8 +345,8 @@ function closeModal(id) {
 }
 
 /* ---------- Wire up ---------- */
-document.addEventListener('DOMContentLoaded', () => {
-    if (isLoggedIn()) showDashboard();
+document.addEventListener('DOMContentLoaded', async () => {
+    if (await isLoggedIn()) showDashboard();
 
     document.getElementById('adminLoginForm').addEventListener('submit', handleLogin);
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);

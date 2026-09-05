@@ -18,8 +18,8 @@
             <p class="subtitle">Sign in to manage services</p>
             <form class="auth-form" id="adminLoginForm">
                 <div class="form-group">
-                    <label class="form-label" for="adminUsername">Username</label>
-                    <input type="text" id="adminUsername" class="form-input" required autocomplete="username">
+                    <label class="form-label" for="adminUsername">Email</label>
+                    <input type="email" id="adminUsername" class="form-input" required autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="adminPassword">Password</label>
@@ -29,17 +29,13 @@
                 <button type="submit" class="form-btn btn-login">Login</button>
             </form>
             <div class="admin-notice">
-                ⚠️ This login only hides the panel from casual visitors — it is <strong>not real security</strong>. The credentials live in a public JavaScript file, so anyone who inspects the page source can see them. Do not use this panel to protect highly sensitive data.
+                🔒 This login is real (Supabase Auth) — create your admin account once in your Supabase project under Authentication → Users. Keep this email/password private; anyone who logs in can add, edit or delete service records.
             </div>
         </div>
     </div>
 
     <!-- ============ DASHBOARD (hidden until login) ============ -->
     <div id="adminDashboard" style="display:none;">
-        <div class="admin-warning-bar" style="background: #eef7ee; color: #1e6b24; border-bottom: 1px solid #c3e6c6;">
-            ✅ <strong>Cloud Sync Active:</strong> All new additions, updates, and deletes are permanently saved in real-time.
-        </div>
-
         <header class="admin-topbar">
             <div class="container">
                 <div class="admin-topbar-brand">
@@ -197,12 +193,12 @@
                         <div class="full">
                             <label class="form-label" for="formCertificateUrl">Certificate — Google Drive Link</label>
                             <input type="url" id="formCertificateUrl" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
-                            <p class="admin-form-hint">⚠️ "Anyone with the link" on Google Drive means anyone who gets this link can open the file.</p>
+                            <p class="admin-form-hint">⚠️ "Anyone with the link" on Google Drive means anyone who gets this link can open the file — it is not fully private.</p>
                         </div>
                     </div>
                     <div class="error-message" id="formError" style="margin-top:1rem;"></div>
                     <div class="admin-form-actions">
-                        <button type="submit" id="submitServiceBtn" class="btn btn-primary">Save Service</button>
+                        <button type="submit" class="btn btn-primary">Save Service</button>
                         <button type="button" class="btn btn-outline" onclick="closeModal('serviceFormModal')">Cancel</button>
                     </div>
                 </form>
@@ -221,8 +217,8 @@
         </div>
     </div>
 
-    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>
