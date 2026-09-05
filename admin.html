@@ -191,16 +191,45 @@
                             <label class="form-label" for="formRejectionReason">Rejection Reason (if applicable)</label>
                             <textarea id="formRejectionReason" rows="2"></textarea>
                         </div>
-                        <div class="full">
-                            <label class="form-label" for="formReceiptUrl">Receipt — Google Drive Link</label>
-                            <input type="url" id="formReceiptUrl" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
+
+                        <!-- Google Drive Auto-Upload Section (PDF Only) -->
+                        <div class="full" style="background:var(--paper-dim); padding:1rem; border-radius:var(--radius-sm); border:1.5px dashed var(--rule-strong); margin-top:0.4rem;">
+                            <label class="form-label" style="font-weight:700; margin-bottom:0.6rem;">☁️ Google Drive Auto-Upload (PDF Only)</label>
+                            
+                            <div style="margin-bottom:0.8rem;">
+                                <label class="form-label" style="font-size:0.82rem;" for="fileReceipt">Receipt PDF</label>
+                                <input type="file" id="fileReceipt" accept="application/pdf" class="form-input" style="padding:0.4rem; background:#fff;">
+                                <small id="fileReceiptStatus" class="admin-form-hint" style="display:block; margin-top:0.25rem;"></small>
+                            </div>
+
+                            <div>
+                                <label class="form-label" style="font-size:0.82rem;" for="fileCertificate">Certificate PDF</label>
+                                <input type="file" id="fileCertificate" accept="application/pdf" class="form-input" style="padding:0.4rem; background:#fff;">
+                                <small id="fileCertificateStatus" class="admin-form-hint" style="display:block; margin-top:0.25rem;"></small>
+                            </div>
+
+                            <div id="uploadStatusText" style="display:none; color:var(--saffron-deep); font-weight:600; font-size:0.85rem; margin-top:0.8rem;"></div>
                         </div>
-                        <div class="full">
-                            <label class="form-label" for="formCertificateUrl">Certificate — Google Drive Link</label>
-                            <input type="url" id="formCertificateUrl" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
-                            <p class="admin-form-hint">⚠️ "Anyone with the link" on Google Drive means anyone who gets this link can open the file — it is not fully private.</p>
+
+                        <!-- Manual Google Drive Links (Preserved for Old Records & Editing) -->
+                        <div class="full" style="margin-top:0.3rem;">
+                            <details style="font-size:0.85rem; color:var(--slate-soft);">
+                                <summary style="cursor:pointer; font-weight:600; color:var(--ink);">Manual Drive Links (Advanced / Legacy Fallback)</summary>
+                                <div style="margin-top:0.8rem; display:flex; flex-direction:column; gap:0.8rem;">
+                                    <div>
+                                        <label class="form-label" for="formReceiptUrl">Receipt — Google Drive Link</label>
+                                        <input type="url" id="formReceiptUrl" class="form-input" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
+                                    </div>
+                                    <div>
+                                        <label class="form-label" for="formCertificateUrl">Certificate — Google Drive Link</label>
+                                        <input type="url" id="formCertificateUrl" class="form-input" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
+                                        <p class="admin-form-hint">⚠️ "Anyone with the link" on Google Drive means anyone who gets this link can open the file.</p>
+                                    </div>
+                                </div>
+                            </details>
                         </div>
                     </div>
+                    
                     <div class="error-message" id="formError" style="margin-top:1rem;"></div>
                     <div class="admin-form-actions">
                         <button type="submit" class="btn btn-primary">Save Service</button>

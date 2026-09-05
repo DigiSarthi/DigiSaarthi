@@ -36,14 +36,21 @@
             </div>
 
             <div class="track-box">
-                <form class="track-form" id="trackForm">
-                    <input type="text" id="trackInput" placeholder="Enter Service Number" autocomplete="off" aria-label="Service Number">
+                <form class="track-form" id="trackForm" style="display: flex; align-items: center; gap: 8px;">
+                    <!-- Fixed Prefix Badge -->
+                    <span style="background: var(--paper-dim); color: var(--ink); font-family: var(--font-head); font-weight: 700; padding: 10px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--rule-strong); user-select: none;">
+                        DS-
+                    </span>
+
+                    <!-- Input box for user token/number -->
+                    <input type="text" id="trackInput" placeholder="2026-00125" autocomplete="off" aria-label="Service Number" style="flex: 1; min-width: 140px;">
+
                     <div class="track-form-actions">
                         <button type="submit" class="btn btn-primary">Search Service</button>
                         <button type="button" id="trackClearBtn" class="btn btn-outline">Clear</button>
                     </div>
                 </form>
-                <p class="track-example">Example: <code>DS-2026-00125</code></p>
+                <p class="track-example">Example: <code>2026-00125</code></p>
 
                 <div id="trackResultPanel" class="track-result" role="status" aria-live="polite"></div>
             </div>
@@ -57,7 +64,7 @@
     <!-- Minimal footer -->
     <footer class="footer" style="padding: 2rem 0;">
         <div class="container footer-bottom" style="border-top:none; margin-top:0; padding-top:0;">
-            <p>&copy; 2024 Digi Saarthi. All rights reserved. | Digisaarthi, Dulkibandh, Kalahandi | +91 7608913436</p>
+            <p>&copy; 2026 Digi Saarthi. All rights reserved. | Digisaarthi, Dulkibandh, Kalahandi | +91 7608913436</p>
         </div>
     </footer>
 

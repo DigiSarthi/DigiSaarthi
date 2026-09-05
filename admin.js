@@ -1,20 +1,5 @@
 /* =========================================================
-   Digi Saarthi — Admin Panel
-   =========================================================
-   HOW THIS WORKS:
-
-   - Records live permanently in a Supabase (Postgres) database.
-     Clicking "Save Service" writes straight to that database —
-     there is no export/download/commit step anymore.
-   - Login uses real Supabase Auth (email + password). Create
-     your admin user once inside the Supabase dashboard under
-     Authentication → Users → Add user.
-   - Row Level Security (set up via the provided SQL) is what
-     actually protects writes: only a logged-in (authenticated)
-     user can add/edit/delete. The public tracking page can only
-     call a narrow search function that returns one record at a
-     time — it can never list all customers.
-   - See config.js for the Supabase URL/key this file uses.
+   Digi Saarthi — Admin Panel (Auto Drive Upload Integrated)
    ========================================================= */
 
 const SERVICE_TYPES = [
@@ -29,10 +14,7 @@ const SERVICE_TYPES = [
     'Other'
 ];
 
-/* ============================= DATA LAYER =============================
-   Everything else in this file only calls these functions, so this is
-   the only place that would need to change if you ever swap databases.
-   ======================================================================= */
+/* ============================= DATA LAYER ============================= */
 function fromDb(row) {
     return {
         serviceNumber: row.service_number,
@@ -94,44 +76,40 @@ async function deleteRecordRemote(serviceNumber) {
 /* ======================================================================= */
 
 let RECORDS = [];
-let EDITING_SERVICE_NUMBER = null; // null = adding new
+let EDITING_SERVICE_NUMBER = null;
 
-/* ---------- Mobile number helpers ---------- */
 function normalizeMobile(raw) {
     const digits = (raw || '').replace(/\D/g, '');
-    return digits.slice(-10); // strips a leading 0 or 91 if the admin pastes it that way
+    return digits.slice(-10);
 }
 
 function isValidIndianMobile(number) {
     return /^[6-9]\d{9}$/.test(number);
 }
 
-/* ---------- WhatsApp notification (reusable for future statuses too) ---------- */
+/* ---------- WhatsApp notification ---------- */
+/* ---------- WhatsApp notification ---------- */
 const WHATSAPP_TEMPLATES = {
     Completed: (r) =>
 `Dear ${r.customerName},
 
-You had applied for ${r.serviceType} through DigiSaarthi.
+Your service for ${r.serviceType} has been successfully completed! 🎉
 
-We are pleased to inform you that your service has been successfully completed. 🎉
+Your Service Number is:
+*${r.serviceNumber}*
 
-Service Number: ${r.serviceNumber}
+Track your application and download documents here:
+https://digisarthi.github.io/DigiSaarthi/track.html
 
-You can check your application status and access the available documents using the link below:
-https://digisarthi.github.io/DigiSaarthi/#track
-
-Please enter your Service Number on the tracking page to view your service details.
+(Simply tap and copy the Service Number above, then paste it on the tracking page)
 
 Thank you for choosing DigiSaarthi. 🙏`
-    // Future: add Processing / Rejected templates here the same way,
-    // and add their status name to NOTIFY_ON_STATUSES below.
 };
-
 const NOTIFY_ON_STATUSES = ['Completed'];
 
 function openWhatsAppNotifyModal(record) {
     const template = WHATSAPP_TEMPLATES[record.serviceStatus];
-    if (!template) return; // no template for this status yet — nothing to show
+    if (!template) return;
 
     const message = template(record);
     const mobile = normalizeMobile(record.mobileNumber);
@@ -202,7 +180,6 @@ async function showDashboard() {
     renderAll();
 }
 
-/* ---------- Next service number ---------- */
 function suggestNextServiceNumber() {
     const year = new Date().getFullYear();
     const prefix = `DS-${year}-`;
@@ -216,7 +193,6 @@ function suggestNextServiceNumber() {
     return prefix + String(max + 1).padStart(5, '0');
 }
 
-/* ---------- Rendering: stats ---------- */
 function renderStats() {
     const counts = { Pending: 0, Processing: 0, Completed: 0, Rejected: 0 };
     RECORDS.forEach(r => { if (counts[r.serviceStatus] !== undefined) counts[r.serviceStatus]++; });
@@ -227,7 +203,6 @@ function renderStats() {
     document.getElementById('statRejected').textContent = counts.Rejected;
 }
 
-/* ---------- Rendering: table ---------- */
 function getFilteredRecords() {
     const q = document.getElementById('filterSearch').value.trim().toLowerCase();
     const type = document.getElementById('filterType').value;
@@ -297,6 +272,46 @@ function populateTypeFilter() {
     select.dataset.populated = 'true';
 }
 
+/* ---------- Google Drive Auto-Upload Helpers ---------- */
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64String = reader.result.includes(',') 
+                ? reader.result.split(',')[1] 
+                : reader.result;
+            resolve(base64String);
+        };
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
+async function uploadToDrive(file, serviceNumber, docType) {
+    if (typeof GDRIVE_UPLOAD_URL === 'undefined' || !GDRIVE_UPLOAD_URL || GDRIVE_UPLOAD_URL.includes('PASTE_YOUR_')) {
+        throw new Error('config.js me GDRIVE_UPLOAD_URL sahi se set nahi hai.');
+    }
+
+    const base64Data = await fileToBase64(file);
+    const fileName = `${serviceNumber}_${docType}.pdf`;
+
+    const response = await fetch(GDRIVE_UPLOAD_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+            serviceNumber: serviceNumber,
+            fileName: fileName,
+            fileData: base64Data
+        })
+    });
+
+    const result = await response.json();
+    if (!result || !result.success) {
+        throw new Error(result?.error || `${docType} upload fail ho gaya.`);
+    }
+    return result.url;
+}
+
 /* ---------- Add / Edit modal ---------- */
 function openAddModal() {
     EDITING_SERVICE_NUMBER = null;
@@ -314,7 +329,7 @@ function openEditModal(serviceNumber) {
     document.getElementById('formModalTitle').textContent = 'Edit Service';
     resetForm();
     document.getElementById('formServiceNumber').value = record.serviceNumber;
-    document.getElementById('formServiceNumber').readOnly = true; // service number should not change once issued
+    document.getElementById('formServiceNumber').readOnly = true;
     document.getElementById('formCustomerName').value = record.customerName || '';
     document.getElementById('formMobileNumber').value = record.mobileNumber || '';
     document.getElementById('formServiceType').value = record.serviceType || '';
@@ -325,12 +340,26 @@ function openEditModal(serviceNumber) {
     document.getElementById('formRejectionReason').value = record.rejectionReason || '';
     document.getElementById('formReceiptUrl').value = record.receiptUrl || '';
     document.getElementById('formCertificateUrl').value = record.certificateUrl || '';
+
+    if (record.receiptUrl) {
+        document.getElementById('fileReceiptStatus').innerHTML = `Current: <a href="${record.receiptUrl}" target="_blank">View File</a> (choose new PDF to replace)`;
+    }
+    if (record.certificateUrl) {
+        document.getElementById('fileCertificateStatus').innerHTML = `Current: <a href="${record.certificateUrl}" target="_blank">View File</a> (choose new PDF to replace)`;
+    }
+
     openModal('serviceFormModal');
 }
 
 function resetForm() {
     document.getElementById('serviceForm').reset();
     document.getElementById('formError').textContent = '';
+    const rStatus = document.getElementById('fileReceiptStatus');
+    const cStatus = document.getElementById('fileCertificateStatus');
+    const statusText = document.getElementById('uploadStatusText');
+    if (rStatus) rStatus.textContent = '';
+    if (cStatus) cStatus.textContent = '';
+    if (statusText) statusText.style.display = 'none';
 }
 
 function openViewModal(serviceNumber) {
@@ -356,10 +385,11 @@ function openViewModal(serviceNumber) {
     openModal('viewServiceModal');
 }
 
-function handleServiceFormSubmit(e) {
+async function handleServiceFormSubmit(e) {
     e.preventDefault();
     const serviceNumber = document.getElementById('formServiceNumber').value.trim().toUpperCase();
     const errorEl = document.getElementById('formError');
+    const statusText = document.getElementById('uploadStatusText');
     errorEl.textContent = '';
 
     if (!/^DS-\d{4}-\d{5}$/.test(serviceNumber)) {
@@ -380,40 +410,81 @@ function handleServiceFormSubmit(e) {
         return;
     }
 
-    // Capture status BEFORE this save, so we only notify on the first time
-    // a service becomes Completed — not on every later edit.
     const previousRecord = EDITING_SERVICE_NUMBER ? RECORDS.find(r => r.serviceNumber === EDITING_SERVICE_NUMBER) : null;
     const previousStatus = previousRecord ? previousRecord.serviceStatus : null;
 
-    const record = {
-        serviceNumber,
-        customerName: document.getElementById('formCustomerName').value.trim(),
-        mobileNumber: mobileNormalized, // stored without country code; wa.me link adds 91
-        serviceType: document.getElementById('formServiceType').value,
-        applicationDate: document.getElementById('formApplicationDate').value,
-        paymentStatus: document.getElementById('formPaymentStatus').value,
-        serviceStatus: document.getElementById('formServiceStatus').value,
-        completionDate: document.getElementById('formCompletionDate').value,
-        rejectionReason: document.getElementById('formRejectionReason').value.trim(),
-        receiptUrl: document.getElementById('formReceiptUrl').value.trim(),
-        certificateUrl: document.getElementById('formCertificateUrl').value.trim()
-    };
+    const receiptFileInput = document.getElementById('fileReceipt');
+    const certFileInput = document.getElementById('fileCertificate');
+    const receiptFile = receiptFileInput ? receiptFileInput.files[0] : null;
+    const certFile = certFileInput ? certFileInput.files[0] : null;
 
-    const shouldNotify = NOTIFY_ON_STATUSES.includes(record.serviceStatus) && previousStatus !== record.serviceStatus;
+    if (receiptFile && receiptFile.type !== 'application/pdf') {
+        errorEl.textContent = 'Receipt must be a valid PDF file.';
+        return;
+    }
+    if (certFile && certFile.type !== 'application/pdf') {
+        errorEl.textContent = 'Certificate must be a valid PDF file.';
+        return;
+    }
 
     const saveBtn = document.querySelector('#serviceForm button[type="submit"]');
     saveBtn.disabled = true;
-    saveBtn.textContent = 'Saving...';
+    saveBtn.textContent = 'Uploading files...';
+    if (statusText) statusText.style.display = 'block';
 
-    upsertRecord(record)
-        .then(async () => {
-            RECORDS = await loadRecords();
-            closeModal('serviceFormModal');
-            renderAll();
-            if (shouldNotify) openWhatsAppNotifyModal(record);
-        })
-        .catch(err => { errorEl.textContent = 'Could not save: ' + err.message; })
-        .finally(() => { saveBtn.disabled = false; saveBtn.textContent = 'Save Service'; });
+    let receiptUrl = document.getElementById('formReceiptUrl').value.trim();
+    let certificateUrl = document.getElementById('formCertificateUrl').value.trim();
+
+    try {
+        if (receiptFile) {
+            if (statusText) statusText.textContent = '⏳ Uploading Receipt PDF to Google Drive...';
+            receiptUrl = await uploadToDrive(receiptFile, serviceNumber, 'Receipt');
+            document.getElementById('formReceiptUrl').value = receiptUrl;
+            document.getElementById('fileReceiptStatus').innerHTML = `✓ Uploaded: <a href="${receiptUrl}" target="_blank">View File</a>`;
+            receiptFileInput.value = '';
+        }
+
+        if (certFile) {
+            if (statusText) statusText.textContent = '⏳ Uploading Certificate PDF to Google Drive...';
+            certificateUrl = await uploadToDrive(certFile, serviceNumber, 'Certificate');
+            document.getElementById('formCertificateUrl').value = certificateUrl;
+            document.getElementById('fileCertificateStatus').innerHTML = `✓ Uploaded: <a href="${certificateUrl}" target="_blank">View File</a>`;
+            certFileInput.value = '';
+        }
+
+        if (statusText) statusText.textContent = '💾 Saving to Supabase database...';
+
+        const record = {
+            serviceNumber,
+            customerName: document.getElementById('formCustomerName').value.trim(),
+            mobileNumber: mobileNormalized,
+            serviceType: document.getElementById('formServiceType').value,
+            applicationDate: document.getElementById('formApplicationDate').value,
+            paymentStatus: document.getElementById('formPaymentStatus').value,
+            serviceStatus: document.getElementById('formServiceStatus').value,
+            completionDate: document.getElementById('formCompletionDate').value,
+            rejectionReason: document.getElementById('formRejectionReason').value.trim(),
+            receiptUrl: receiptUrl,
+            certificateUrl: certificateUrl
+        };
+
+        const shouldNotify = NOTIFY_ON_STATUSES.includes(record.serviceStatus) && previousStatus !== record.serviceStatus;
+
+        await upsertRecord(record);
+        RECORDS = await loadRecords();
+        closeModal('serviceFormModal');
+        renderAll();
+
+        if (shouldNotify) {
+            openWhatsAppNotifyModal(record);
+        }
+    } catch (err) {
+        errorEl.textContent = 'Upload or Save failed: ' + err.message + '. Any previously uploaded document URLs are preserved in the form.';
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Service';
+        if (statusText) statusText.style.display = 'none';
+    }
 }
 
 function deleteRecord(serviceNumber) {
@@ -426,7 +497,6 @@ function deleteRecord(serviceNumber) {
         .catch(err => alert('Could not delete: ' + err.message));
 }
 
-/* ---------- Modal helpers (shared pattern with rest of site) ---------- */
 function openModal(id) {
     document.getElementById(id).classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -436,7 +506,6 @@ function closeModal(id) {
     document.body.style.overflow = 'auto';
 }
 
-/* ---------- Wire up ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
     if (await isLoggedIn()) showDashboard();
 
@@ -444,6 +513,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
     document.getElementById('addServiceBtn').addEventListener('click', openAddModal);
     document.getElementById('serviceForm').addEventListener('submit', handleServiceFormSubmit);
+
+    const fileReceiptInput = document.getElementById('fileReceipt');
+    if (fileReceiptInput) {
+        fileReceiptInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) document.getElementById('fileReceiptStatus').textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+        });
+    }
+
+    const fileCertificateInput = document.getElementById('fileCertificate');
+    if (fileCertificateInput) {
+        fileCertificateInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) document.getElementById('fileCertificateStatus').textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+        });
+    }
 
     ['filterSearch', 'filterType', 'filterStatus', 'filterPayment'].forEach(id => {
         document.getElementById(id).addEventListener('input', renderTable);

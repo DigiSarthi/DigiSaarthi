@@ -185,14 +185,45 @@ function clearResult() {
     panel.classList.remove('visible');
 }
 
+// Normalizer: cleans user input and builds full DS-YYYY-XXXXX for database
+function getCleanFullServiceNumber(rawVal) {
+    let val = (rawVal || '').trim().toUpperCase();
+    if (!val) return '';
+
+    // Remove user-entered DS prefix if already pasted
+    if (val.startsWith('DS-')) {
+        val = val.substring(3);
+    } else if (val.startsWith('DS_')) {
+        val = val.substring(3);
+    } else if (val.startsWith('DS')) {
+        val = val.substring(2);
+    }
+
+    // Convert continuous digits like 202600125 -> 2026-00125
+    if (/^\d{9}$/.test(val)) {
+        val = `${val.slice(0, 4)}-${val.slice(4)}`;
+    }
+
+    // Update input box to display clean number without duplicate DS-
+    const input = document.getElementById('trackInput');
+    if (input) input.value = val;
+
+    return 'DS-' + val;
+}
+
 async function runTrackSearch() {
     const input = document.getElementById('trackInput');
-    const query = input.value.trim().toUpperCase();
-    if (!query) { clearResult(); return; }
+    if (!input) return;
+
+    const fullServiceNumber = getCleanFullServiceNumber(input.value);
+    if (!input.value.trim()) {
+        clearResult();
+        return;
+    }
 
     renderLoading();
     try {
-        const match = await findServiceByNumber(query);
+        const match = await findServiceByNumber(fullServiceNumber);
         if (match) renderResult(match);
         else renderNotFound();
     } catch (err) {
@@ -204,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('trackForm');
     const input = document.getElementById('trackInput');
     const clearBtn = document.getElementById('trackClearBtn');
-    if (!form) return; // tracking widget not present on this page
+    if (!form) return;
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
