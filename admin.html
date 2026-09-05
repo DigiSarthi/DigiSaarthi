@@ -143,6 +143,11 @@
                             <label class="form-label" for="formCustomerName">Customer Name</label>
                             <input type="text" id="formCustomerName" required>
                         </div>
+                        <div class="full">
+                            <label class="form-label" for="formMobileNumber">Mobile Number</label>
+                            <input type="tel" id="formMobileNumber" placeholder="9876543210" maxlength="10" inputmode="numeric">
+                            <p class="admin-form-hint">10-digit Indian mobile number, no +91 needed. Optional — leave blank if not available.</p>
+                        </div>
                         <div>
                             <label class="form-label" for="formServiceType">Service Type</label>
                             <select id="formServiceType" required>
@@ -214,6 +219,32 @@
                 <button class="modal-close" onclick="closeModal('viewServiceModal')">&times;</button>
             </div>
             <div class="modal-body" id="viewModalBody"></div>
+        </div>
+    </div>
+
+    <!-- ============ WhatsApp Notification Modal ============ -->
+    <div id="whatsappNotifyModal" class="modal-overlay">
+        <div class="modal-container admin-modal-body">
+            <div class="modal-header">
+                <h2 class="modal-title">🎉 Service Completed</h2>
+                <button class="modal-close" onclick="closeModal('whatsappNotifyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <dl class="admin-view-grid" style="margin-bottom:1.2rem;">
+                    <div><dt>Customer Name</dt><dd id="waNotifyName">—</dd></div>
+                    <div><dt>Service</dt><dd id="waNotifyService">—</dd></div>
+                    <div><dt>Service Number</dt><dd id="waNotifyServiceNumber">—</dd></div>
+                    <div><dt>Mobile</dt><dd id="waNotifyMobile">—</dd></div>
+                </dl>
+                <label class="form-label">Message preview</label>
+                <textarea id="waNotifyMessage" class="form-input" rows="9" readonly style="font-family: var(--font-body); font-size:0.88rem; background:var(--paper-dim);"></textarea>
+                <p class="admin-form-hint" id="waNotifyHint"></p>
+                <div class="admin-form-actions">
+                    <button type="button" id="waSendBtn" class="btn btn-secondary">📱 Send on WhatsApp</button>
+                    <button type="button" id="waCopyBtn" class="btn btn-outline-primary">📋 Copy Message</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('whatsappNotifyModal')">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 

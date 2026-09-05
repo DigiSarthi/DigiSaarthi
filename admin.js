@@ -37,6 +37,7 @@ function fromDb(row) {
     return {
         serviceNumber: row.service_number,
         customerName: row.customer_name,
+        mobileNumber: row.mobile_number || '',
         serviceType: row.service_type,
         applicationDate: row.application_date || '',
         paymentStatus: row.payment_status,
@@ -52,6 +53,7 @@ function toDb(record) {
     return {
         service_number: record.serviceNumber,
         customer_name: record.customerName,
+        mobile_number: record.mobileNumber || null,
         service_type: record.serviceType,
         application_date: record.applicationDate || null,
         payment_status: record.paymentStatus,
@@ -93,6 +95,78 @@ async function deleteRecordRemote(serviceNumber) {
 
 let RECORDS = [];
 let EDITING_SERVICE_NUMBER = null; // null = adding new
+
+/* ---------- Mobile number helpers ---------- */
+function normalizeMobile(raw) {
+    const digits = (raw || '').replace(/\D/g, '');
+    return digits.slice(-10); // strips a leading 0 or 91 if the admin pastes it that way
+}
+
+function isValidIndianMobile(number) {
+    return /^[6-9]\d{9}$/.test(number);
+}
+
+/* ---------- WhatsApp notification (reusable for future statuses too) ---------- */
+const WHATSAPP_TEMPLATES = {
+    Completed: (r) =>
+`Dear ${r.customerName},
+
+You had applied for ${r.serviceType} through DigiSaarthi.
+
+We are pleased to inform you that your service has been successfully completed. 🎉
+
+Service Number: ${r.serviceNumber}
+
+You can check your application status and access the available documents using the link below:
+https://digisarthi.github.io/DigiSaarthi/#track
+
+Please enter your Service Number on the tracking page to view your service details.
+
+Thank you for choosing DigiSaarthi. 🙏`
+    // Future: add Processing / Rejected templates here the same way,
+    // and add their status name to NOTIFY_ON_STATUSES below.
+};
+
+const NOTIFY_ON_STATUSES = ['Completed'];
+
+function openWhatsAppNotifyModal(record) {
+    const template = WHATSAPP_TEMPLATES[record.serviceStatus];
+    if (!template) return; // no template for this status yet — nothing to show
+
+    const message = template(record);
+    const mobile = normalizeMobile(record.mobileNumber);
+    const mobileValid = isValidIndianMobile(mobile);
+
+    document.getElementById('waNotifyName').textContent = record.customerName;
+    document.getElementById('waNotifyService').textContent = record.serviceType;
+    document.getElementById('waNotifyServiceNumber').textContent = record.serviceNumber;
+    document.getElementById('waNotifyMobile').textContent = mobileValid ? mobile : (record.mobileNumber || '—');
+    document.getElementById('waNotifyMessage').value = message;
+
+    const sendBtn = document.getElementById('waSendBtn');
+    const hint = document.getElementById('waNotifyHint');
+
+    if (mobileValid) {
+        sendBtn.disabled = false;
+        hint.textContent = '';
+        sendBtn.onclick = () => {
+            const waLink = `https://wa.me/91${mobile}?text=${encodeURIComponent(message)}`;
+            window.open(waLink, '_blank');
+        };
+    } else {
+        sendBtn.disabled = true;
+        hint.textContent = 'Add a valid 10-digit mobile number to this service to enable WhatsApp sending.';
+        sendBtn.onclick = null;
+    }
+
+    document.getElementById('waCopyBtn').onclick = () => {
+        navigator.clipboard.writeText(message)
+            .then(() => alert('Message copied!'))
+            .catch(() => alert('Could not copy — please select and copy the text manually.'));
+    };
+
+    openModal('whatsappNotifyModal');
+}
 
 /* ---------- Auth ---------- */
 async function isLoggedIn() {
@@ -242,6 +316,7 @@ function openEditModal(serviceNumber) {
     document.getElementById('formServiceNumber').value = record.serviceNumber;
     document.getElementById('formServiceNumber').readOnly = true; // service number should not change once issued
     document.getElementById('formCustomerName').value = record.customerName || '';
+    document.getElementById('formMobileNumber').value = record.mobileNumber || '';
     document.getElementById('formServiceType').value = record.serviceType || '';
     document.getElementById('formApplicationDate').value = record.applicationDate || '';
     document.getElementById('formPaymentStatus').value = record.paymentStatus || 'Unpaid';
@@ -265,6 +340,7 @@ function openViewModal(serviceNumber) {
         <dl class="admin-view-grid">
             <div><dt>Service Number</dt><dd>${r.serviceNumber}</dd></div>
             <div><dt>Customer Name</dt><dd>${r.customerName}</dd></div>
+            <div><dt>Mobile Number</dt><dd>${r.mobileNumber || '—'}</dd></div>
             <div><dt>Service Type</dt><dd>${r.serviceType}</dd></div>
             <div><dt>Application Date</dt><dd>${r.applicationDate || '—'}</dd></div>
             <div><dt>Payment Status</dt><dd>${r.paymentStatus}</dd></div>
@@ -297,9 +373,22 @@ function handleServiceFormSubmit(e) {
         return;
     }
 
+    const mobileRaw = document.getElementById('formMobileNumber').value.trim();
+    const mobileNormalized = normalizeMobile(mobileRaw);
+    if (mobileRaw && !isValidIndianMobile(mobileNormalized)) {
+        errorEl.textContent = 'Please enter a valid 10-digit Indian mobile number, or leave it blank.';
+        return;
+    }
+
+    // Capture status BEFORE this save, so we only notify on the first time
+    // a service becomes Completed — not on every later edit.
+    const previousRecord = EDITING_SERVICE_NUMBER ? RECORDS.find(r => r.serviceNumber === EDITING_SERVICE_NUMBER) : null;
+    const previousStatus = previousRecord ? previousRecord.serviceStatus : null;
+
     const record = {
         serviceNumber,
         customerName: document.getElementById('formCustomerName').value.trim(),
+        mobileNumber: mobileNormalized, // stored without country code; wa.me link adds 91
         serviceType: document.getElementById('formServiceType').value,
         applicationDate: document.getElementById('formApplicationDate').value,
         paymentStatus: document.getElementById('formPaymentStatus').value,
@@ -310,6 +399,8 @@ function handleServiceFormSubmit(e) {
         certificateUrl: document.getElementById('formCertificateUrl').value.trim()
     };
 
+    const shouldNotify = NOTIFY_ON_STATUSES.includes(record.serviceStatus) && previousStatus !== record.serviceStatus;
+
     const saveBtn = document.querySelector('#serviceForm button[type="submit"]');
     saveBtn.disabled = true;
     saveBtn.textContent = 'Saving...';
@@ -319,6 +410,7 @@ function handleServiceFormSubmit(e) {
             RECORDS = await loadRecords();
             closeModal('serviceFormModal');
             renderAll();
+            if (shouldNotify) openWhatsAppNotifyModal(record);
         })
         .catch(err => { errorEl.textContent = 'Could not save: ' + err.message; })
         .finally(() => { saveBtn.disabled = false; saveBtn.textContent = 'Save Service'; });
