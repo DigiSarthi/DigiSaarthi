@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Digi Saarthi</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+    <!-- ============ LOGIN SCREEN ============ -->
+    <div id="adminLoginScreen" class="admin-login-wrap">
+        <div class="admin-login-card">
+            <h2>DigiSaarthi Admin</h2>
+            <p class="subtitle">Sign in to manage services</p>
+            <form class="auth-form" id="adminLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="adminUsername">Username</label>
+                    <input type="text" id="adminUsername" class="form-input" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" class="form-input" required autocomplete="current-password">
+                </div>
+                <div class="error-message" id="adminLoginError"></div>
+                <button type="submit" class="form-btn btn-login">Login</button>
+            </form>
+            <div class="admin-notice">
+                ⚠️ This login only hides the panel from casual visitors — it is <strong>not real security</strong>. The credentials live in a public JavaScript file, so anyone who inspects the page source can see them. Do not use this panel to protect highly sensitive data. For real access control, connect a backend (e.g. Firebase/Supabase Auth) later.
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ DASHBOARD (hidden until login) ============ -->
+    <div id="adminDashboard" style="display:none;">
+        <div class="admin-warning-bar">
+            <strong>Remember:</strong> changes here only live in this browser. Click <strong>Export services.json</strong> and commit it to GitHub to publish updates to customers.
+        </div>
+
+        <header class="admin-topbar">
+            <div class="container">
+                <div class="admin-topbar-brand">
+                    <svg width="30" height="30" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="22" r="21" fill="#E2861A"/>
+                        <path d="M14 24.5l5 5 11-12" fill="none" stroke="#0B2545" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    DigiSaarthi Admin Dashboard
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <a href="index.html" class="btn btn-outline btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.4);">View Site</a>
+                    <button id="logoutBtn" class="btn btn-outline btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.4);">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="admin-wrap">
+            <!-- Stats -->
+            <div class="admin-stats">
+                <div class="admin-stat-card">
+                    <span class="num" id="statTotal">0</span>
+                    <span class="label">Total Services</span>
+                </div>
+                <div class="admin-stat-card pending">
+                    <span class="num" id="statPending">0</span>
+                    <span class="label">Pending</span>
+                </div>
+                <div class="admin-stat-card processing">
+                    <span class="num" id="statProcessing">0</span>
+                    <span class="label">Processing</span>
+                </div>
+                <div class="admin-stat-card completed">
+                    <span class="num" id="statCompleted">0</span>
+                    <span class="label">Completed</span>
+                </div>
+                <div class="admin-stat-card rejected">
+                    <span class="num" id="statRejected">0</span>
+                    <span class="label">Rejected</span>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="admin-toolbar">
+                <h3 style="margin:0;">All Services</h3>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button id="exportBtn" class="btn btn-outline-primary">⬇ Export services.json</button>
+                    <button id="addServiceBtn" class="btn btn-primary">+ Add New Service</button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="admin-filters">
+                <input type="text" id="filterSearch" placeholder="Search by Service Number or Customer Name">
+                <select id="filterType"><option value="">All Service Types</option></select>
+                <select id="filterStatus">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+                <select id="filterPayment">
+                    <option value="">All Payment Status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Unpaid">Unpaid</option>
+                    <option value="Partial">Partial</option>
+                </select>
+            </div>
+
+            <!-- Table -->
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Service Number</th>
+                            <th>Customer</th>
+                            <th>Service</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============ Add/Edit Service Modal ============ -->
+    <div id="serviceFormModal" class="modal-overlay">
+        <div class="modal-container admin-modal-body">
+            <div class="modal-header">
+                <h2 class="modal-title" id="formModalTitle">Add New Service</h2>
+                <button class="modal-close" onclick="closeModal('serviceFormModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="serviceForm">
+                    <div class="admin-form-grid">
+                        <div class="full">
+                            <label class="form-label" for="formServiceNumber">Service Number</label>
+                            <input type="text" id="formServiceNumber" placeholder="DS-2026-00129" required>
+                            <p class="admin-form-hint">Format: DS-YYYY-XXXXX. Auto-suggested for new services; locked while editing.</p>
+                        </div>
+                        <div class="full">
+                            <label class="form-label" for="formCustomerName">Customer Name</label>
+                            <input type="text" id="formCustomerName" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="formServiceType">Service Type</label>
+                            <select id="formServiceType" required>
+                                <option value="Caste Certificate">Caste Certificate</option>
+                                <option value="Residence Certificate">Residence Certificate</option>
+                                <option value="Income Certificate">Income Certificate</option>
+                                <option value="Ration Card">Ration Card</option>
+                                <option value="e-District Service">e-District Service</option>
+                                <option value="Online Application">Online Application</option>
+                                <option value="Printing">Printing</option>
+                                <option value="Scanning">Scanning</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" for="formApplicationDate">Application Date</label>
+                            <input type="date" id="formApplicationDate" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="formPaymentStatus">Payment Status</label>
+                            <select id="formPaymentStatus">
+                                <option value="Paid">Paid</option>
+                                <option value="Unpaid">Unpaid</option>
+                                <option value="Partial">Partial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" for="formServiceStatus">Service Status</label>
+                            <select id="formServiceStatus">
+                                <option value="Pending">Pending</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" for="formCompletionDate">Completion Date</label>
+                            <input type="date" id="formCompletionDate">
+                        </div>
+                        <div class="full">
+                            <label class="form-label" for="formRejectionReason">Rejection Reason (if applicable)</label>
+                            <textarea id="formRejectionReason" rows="2"></textarea>
+                        </div>
+                        <div class="full">
+                            <label class="form-label" for="formReceiptUrl">Receipt — Google Drive Link</label>
+                            <input type="url" id="formReceiptUrl" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
+                        </div>
+                        <div class="full">
+                            <label class="form-label" for="formCertificateUrl">Certificate — Google Drive Link</label>
+                            <input type="url" id="formCertificateUrl" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
+                            <p class="admin-form-hint">⚠️ "Anyone with the link" on Google Drive means anyone who gets this link can open the file — it is not fully private.</p>
+                        </div>
+                    </div>
+                    <div class="error-message" id="formError" style="margin-top:1rem;"></div>
+                    <div class="admin-form-actions">
+                        <button type="submit" class="btn btn-primary">Save Service</button>
+                        <button type="button" class="btn btn-outline" onclick="closeModal('serviceFormModal')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ View Service Modal ============ -->
+    <div id="viewServiceModal" class="modal-overlay">
+        <div class="modal-container admin-modal-body">
+            <div class="modal-header">
+                <h2 class="modal-title">Service Details</h2>
+                <button class="modal-close" onclick="closeModal('viewServiceModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="viewModalBody"></div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

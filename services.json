@@ -1,0 +1,65 @@
+{
+  "_readme": "Each object is one service record. Add new records to the 'records' array below. Never commit Aadhaar numbers, bank details, OTPs or passwords into this file — only the fields listed here.",
+  "records": [
+    {
+      "serviceNumber": "DS-2026-00125",
+      "customerName": "Gobind Sahu",
+      "serviceType": "Caste Certificate",
+      "applicationDate": "2026-09-05",
+      "paymentStatus": "Paid",
+      "serviceStatus": "Completed",
+      "receiptUrl": "https://drive.google.com/file/d/REPLACE_WITH_RECEIPT_FILE_ID/view?usp=sharing",
+      "certificateUrl": "https://drive.google.com/file/d/REPLACE_WITH_CERTIFICATE_FILE_ID/view?usp=sharing",
+      "completionDate": "2026-09-05",
+      "rejectionReason": ""
+    },
+    {
+      "serviceNumber": "DS-2026-00126",
+      "customerName": "Sujata Naik",
+      "serviceType": "Ration Card",
+      "applicationDate": "2026-09-04",
+      "paymentStatus": "Paid",
+      "serviceStatus": "Processing",
+      "receiptUrl": "",
+      "certificateUrl": "",
+      "completionDate": "",
+      "rejectionReason": ""
+    },
+    {
+      "serviceNumber": "DS-2026-00127",
+      "customerName": "Ramesh Majhi",
+      "serviceType": "PAN Card",
+      "applicationDate": "2026-09-03",
+      "paymentStatus": "Pending",
+      "serviceStatus": "Pending",
+      "receiptUrl": "",
+      "certificateUrl": "",
+      "completionDate": "",
+      "rejectionReason": ""
+    },
+    {
+      "serviceNumber": "DS-2026-00128",
+      "customerName": "Anita Pradhan",
+      "serviceType": "Income Certificate",
+      "applicationDate": "2026-08-28",
+      "paymentStatus": "Paid",
+      "serviceStatus": "Rejected",
+      "receiptUrl": "",
+      "certificateUrl": "",
+      "completionDate": "",
+      "rejectionReason": "Submitted documents did not match Aadhaar address. Please visit the centre with updated proof of address."
+    },
+    {
+      "serviceNumber": "DS-2026-00101",
+      "customerName": "JHUNI MAJHI",
+      "serviceType": "Caste Certificate",
+      "applicationDate": "2026-08-10",
+      "paymentStatus": "Paid",
+      "serviceStatus": "Completed",
+      "completionDate": "2026-08-11",
+      "rejectionReason": "",
+      "receiptUrl": "https://drive.google.com/file/d/14uJ3juHJbmKOUM4qr8gai7rKvkmBdYTo/view?usp=sharing",
+      "certificateUrl": "https://drive.google.com/file/d/1ToKviKYK9nY1rljjo6OoV64R1XtiTleG/view?usp=sharing"
+    }
+  ]
+}
