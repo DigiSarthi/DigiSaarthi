@@ -1,28 +1,10 @@
 /* =========================================================
-   Digi Saarthi — Admin Panel
-   =========================================================
-   HOW THIS WORKS (read this before editing):
-
-   - There is no backend. Records live in the browser's
-     localStorage, seeded once from services.json.
-   - Editing here does NOT change the live customer-facing
-     site by itself. You must click "Export services.json"
-     and commit that file to your GitHub repo for changes
-     to actually go live.
-   - The login below is NOT real security — it only hides the
-     panel from casual visitors. Anyone who reads the page
-     source can see the credentials. Do not rely on this for
-     protecting sensitive data.
-   - When you're ready for a real multi-device system, replace
-     the functions in the "DATA LAYER" section with calls to
-     a real backend (Firebase/Supabase/etc). The UI code below
-     does not need to change.
+   Digi Saarthi — Admin Panel (Connected to Supabase)
    ========================================================= */
 
-/* ---------- Change this before publishing ---------- */
 const ADMIN_CREDENTIALS = {
     username: 'admin',
-    password: 'digisaarthi2026'
+    password: 'admin'
 };
 
 const SERVICE_TYPES = [
@@ -37,46 +19,75 @@ const SERVICE_TYPES = [
     'Other'
 ];
 
-const STORAGE_KEY = 'digisaarthi_admin_records';
 const AUTH_KEY = 'digisaarthi_admin_auth';
 
-/* ============================= DATA LAYER =============================
-   Swap these three functions later to talk to a real backend instead
-   of localStorage. Everything else in this file only calls these.
-   ======================================================================= */
+/* ============================= SUPABASE CONFIG ============================= */
+const SUPABASE_URL = 'https://rimoociqkkcmhisdijsd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbW9vY2lxa2NjbWhpc2RpanNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NzczODgsImV4cCI6MjEwNDE1MzM4OH0.gO0Gglk-oqsSW47mBW_8eGiAmonvLoKyhIhwA8hv_XA';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ============================= DATA LAYER ============================= */
 async function loadRecords() {
-    const cached = localStorage.getItem(STORAGE_KEY);
-    if (cached) return JSON.parse(cached);
-    const res = await fetch('services.json', { cache: 'no-store' });
-    const data = await res.json();
-    const records = data.records || [];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-    return records;
+    try {
+        const { data, error } = await supabase
+            .from('services')
+            .select('*')
+            .order('service_number', { ascending: false });
+
+        if (error) throw error;
+
+        // Map Supabase snake_case columns to app's camelCase variables
+        return (data || []).map(r => ({
+            serviceNumber: r.service_number,
+            customerName: r.customer_name,
+            serviceType: r.service_type,
+            applicationDate: r.application_date,
+            paymentStatus: r.payment_status,
+            serviceStatus: r.service_status,
+            completionDate: r.completion_date,
+            rejectionReason: r.rejection_reason || '',
+            receiptUrl: r.receipt_url || '',
+            certificateUrl: r.certificate_url || ''
+        }));
+    } catch (err) {
+        console.error('Error fetching records:', err);
+        return [];
+    }
 }
 
-function saveRecords(records) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-}
-
-function exportRecords(records) {
+async function persistRecord(record) {
     const payload = {
-        _readme: "Each object is one service record. Add new records to the 'records' array below. Never commit Aadhaar numbers, bank details, OTPs or passwords into this file — only the fields listed here.",
-        records
+        service_number: record.serviceNumber,
+        customer_name: record.customerName,
+        service_type: record.serviceType,
+        application_date: record.applicationDate,
+        payment_status: record.paymentStatus,
+        service_status: record.serviceStatus,
+        completion_date: record.completionDate,
+        rejection_reason: record.rejectionReason,
+        receipt_url: record.receiptUrl,
+        certificate_url: record.certificateUrl
     };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'services.json';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+
+    const { error } = await supabase
+        .from('services')
+        .upsert(payload, { onConflict: 'service_number' });
+
+    if (error) throw error;
+}
+
+async function removeRecordFromDB(serviceNumber) {
+    const { error } = await supabase
+        .from('services')
+        .delete()
+        .eq('service_number', serviceNumber);
+
+    if (error) throw error;
 }
 /* ======================================================================= */
 
 let RECORDS = [];
-let EDITING_SERVICE_NUMBER = null; // null = adding new
+let EDITING_SERVICE_NUMBER = null;
 
 /* ---------- Auth ---------- */
 function isLoggedIn() { return sessionStorage.getItem(AUTH_KEY) === 'true'; }
@@ -88,7 +99,7 @@ function handleLogin(e) {
     const p = document.getElementById('adminPassword').value;
     const errorEl = document.getElementById('adminLoginError');
 
-    if (u === 'admin' && p === 'admin') {
+    if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
         sessionStorage.setItem(AUTH_KEY, 'true');
         showDashboard();
     } else {
@@ -221,7 +232,7 @@ function openEditModal(serviceNumber) {
     document.getElementById('formModalTitle').textContent = 'Edit Service';
     resetForm();
     document.getElementById('formServiceNumber').value = record.serviceNumber;
-    document.getElementById('formServiceNumber').readOnly = true; // service number should not change once issued
+    document.getElementById('formServiceNumber').readOnly = true;
     document.getElementById('formCustomerName').value = record.customerName || '';
     document.getElementById('formServiceType').value = record.serviceType || '';
     document.getElementById('formApplicationDate').value = record.applicationDate || '';
@@ -261,10 +272,11 @@ function openViewModal(serviceNumber) {
     openModal('viewServiceModal');
 }
 
-function handleServiceFormSubmit(e) {
+async function handleServiceFormSubmit(e) {
     e.preventDefault();
     const serviceNumber = document.getElementById('formServiceNumber').value.trim().toUpperCase();
     const errorEl = document.getElementById('formError');
+    const submitBtn = document.getElementById('submitServiceBtn');
     errorEl.textContent = '';
 
     if (!/^DS-\d{4}-\d{5}$/.test(serviceNumber)) {
@@ -291,26 +303,34 @@ function handleServiceFormSubmit(e) {
         certificateUrl: document.getElementById('formCertificateUrl').value.trim()
     };
 
-    if (EDITING_SERVICE_NUMBER) {
-        const idx = RECORDS.findIndex(r => r.serviceNumber === EDITING_SERVICE_NUMBER);
-        RECORDS[idx] = record;
-    } else {
-        RECORDS.push(record);
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving to Database...';
+
+    try {
+        await persistRecord(record);
+        RECORDS = await loadRecords();
+        closeModal('serviceFormModal');
+        renderAll();
+    } catch (err) {
+        errorEl.textContent = 'Error saving to database: ' + (err.message || err);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save Service';
     }
-
-    saveRecords(RECORDS);
-    closeModal('serviceFormModal');
-    renderAll();
 }
 
-function deleteRecord(serviceNumber) {
-    if (!confirm(`Delete service ${serviceNumber}? This cannot be undone here (though it stays in services.json on GitHub until you re-export).`)) return;
-    RECORDS = RECORDS.filter(r => r.serviceNumber !== serviceNumber);
-    saveRecords(RECORDS);
-    renderAll();
+async function deleteRecord(serviceNumber) {
+    if (!confirm(`Permanently delete service ${serviceNumber}? This cannot be undone.`)) return;
+    try {
+        await removeRecordFromDB(serviceNumber);
+        RECORDS = RECORDS.filter(r => r.serviceNumber !== serviceNumber);
+        renderAll();
+    } catch (err) {
+        alert('Could not delete record: ' + (err.message || err));
+    }
 }
 
-/* ---------- Modal helpers (shared pattern with rest of site) ---------- */
+/* ---------- Modal helpers ---------- */
 function openModal(id) {
     document.getElementById(id).classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -328,7 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
     document.getElementById('addServiceBtn').addEventListener('click', openAddModal);
     document.getElementById('serviceForm').addEventListener('submit', handleServiceFormSubmit);
-    document.getElementById('exportBtn').addEventListener('click', () => exportRecords(RECORDS));
 
     ['filterSearch', 'filterType', 'filterStatus', 'filterPayment'].forEach(id => {
         document.getElementById(id).addEventListener('input', renderTable);

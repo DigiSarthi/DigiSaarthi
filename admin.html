@@ -29,15 +29,15 @@
                 <button type="submit" class="form-btn btn-login">Login</button>
             </form>
             <div class="admin-notice">
-                ⚠️ This login only hides the panel from casual visitors — it is <strong>not real security</strong>. The credentials live in a public JavaScript file, so anyone who inspects the page source can see them. Do not use this panel to protect highly sensitive data. For real access control, connect a backend (e.g. Firebase/Supabase Auth) later.
+                ⚠️ This login only hides the panel from casual visitors — it is <strong>not real security</strong>. The credentials live in a public JavaScript file, so anyone who inspects the page source can see them. Do not use this panel to protect highly sensitive data.
             </div>
         </div>
     </div>
 
     <!-- ============ DASHBOARD (hidden until login) ============ -->
     <div id="adminDashboard" style="display:none;">
-        <div class="admin-warning-bar">
-            <strong>Remember:</strong> changes here only live in this browser. Click <strong>Export services.json</strong> and commit it to GitHub to publish updates to customers.
+        <div class="admin-warning-bar" style="background: #eef7ee; color: #1e6b24; border-bottom: 1px solid #c3e6c6;">
+            ✅ <strong>Cloud Sync Active:</strong> All new additions, updates, and deletes are permanently saved in real-time.
         </div>
 
         <header class="admin-topbar">
@@ -85,7 +85,6 @@
             <div class="admin-toolbar">
                 <h3 style="margin:0;">All Services</h3>
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button id="exportBtn" class="btn btn-outline-primary">⬇ Export services.json</button>
                     <button id="addServiceBtn" class="btn btn-primary">+ Add New Service</button>
                 </div>
             </div>
@@ -198,12 +197,12 @@
                         <div class="full">
                             <label class="form-label" for="formCertificateUrl">Certificate — Google Drive Link</label>
                             <input type="url" id="formCertificateUrl" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
-                            <p class="admin-form-hint">⚠️ "Anyone with the link" on Google Drive means anyone who gets this link can open the file — it is not fully private.</p>
+                            <p class="admin-form-hint">⚠️ "Anyone with the link" on Google Drive means anyone who gets this link can open the file.</p>
                         </div>
                     </div>
                     <div class="error-message" id="formError" style="margin-top:1rem;"></div>
                     <div class="admin-form-actions">
-                        <button type="submit" class="btn btn-primary">Save Service</button>
+                        <button type="submit" id="submitServiceBtn" class="btn btn-primary">Save Service</button>
                         <button type="button" class="btn btn-outline" onclick="closeModal('serviceFormModal')">Cancel</button>
                     </div>
                 </form>
@@ -222,6 +221,8 @@
         </div>
     </div>
 
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="admin.js"></script>
 </body>
 </html>

@@ -1,34 +1,33 @@
 /* =========================================================
-   Digi Saarthi — Service Tracking & Verification
-   =========================================================
-   FUTURE-READY NOTE:
-   Right now records are read from the static services.json file,
-   which works on GitHub Pages with no server. When a backend is
-   ready, only the fetchServiceRecords() function below needs to
-   change (e.g. to call fetch(CONFIG.apiUrl + '/services/' + number)).
-   Nothing in the rendering code needs to change.
+   Digi Saarthi — Service Tracking & Verification (Supabase)
    ========================================================= */
 
-const TRACK_CONFIG = {
-    // Swap this to a real API base URL later, e.g. 'https://api.digisaarthi.com'
-    apiUrl: null,
-    dataFile: 'services.json'
-};
+const SUPABASE_URL = 'https://rimoociqkkcmhisdijsd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbW9vY2lxa2NjbWhpc2RpanNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NzczODgsImV4cCI6MjEwNDE1MzM4OH0.gO0Gglk-oqsSW47mBW_8eGiAmonvLoKyhIhwA8hv_XA';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let TRACK_CACHE = null; // holds the parsed services.json after first load
+async function fetchServiceRecord(serviceNumber) {
+    const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .eq('service_number', serviceNumber)
+        .maybeSingle();
 
-async function fetchServiceRecords() {
-    if (TRACK_CONFIG.apiUrl) {
-        // Placeholder for future backend integration:
-        // const res = await fetch(`${TRACK_CONFIG.apiUrl}/services`);
-        // return res.json();
-    }
-    if (TRACK_CACHE) return TRACK_CACHE;
-    const res = await fetch(TRACK_CONFIG.dataFile, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Could not load service records');
-    const data = await res.json();
-    TRACK_CACHE = data.records || [];
-    return TRACK_CACHE;
+    if (error) throw error;
+    if (!data) return null;
+
+    return {
+        serviceNumber: data.service_number,
+        customerName: data.customer_name,
+        serviceType: data.service_type,
+        applicationDate: data.application_date,
+        paymentStatus: data.payment_status,
+        serviceStatus: data.service_status,
+        completionDate: data.completion_date,
+        rejectionReason: data.rejection_reason || '',
+        receiptUrl: data.receipt_url || '',
+        certificateUrl: data.certificate_url || ''
+    };
 }
 
 function formatDate(isoDate) {
@@ -62,14 +61,14 @@ function buildTimeline(record) {
     ];
 
     const paid = record.paymentStatus === 'Paid';
-    const entredProcessing = ['Processing', 'Completed', 'Rejected'].includes(record.serviceStatus);
+    const enteredProcessing = ['Processing', 'Completed', 'Rejected'].includes(record.serviceStatus);
     const completed = record.serviceStatus === 'Completed';
     const rejected = record.serviceStatus === 'Rejected';
 
     const state = {
         received: 'done',
         payment: paid ? 'done' : 'pending',
-        processing: entredProcessing ? 'done' : 'pending',
+        processing: enteredProcessing ? 'done' : 'pending',
         final: completed ? 'done' : (rejected ? 'rejected' : 'pending')
     };
 
@@ -192,13 +191,11 @@ async function runTrackSearch() {
 
     renderLoading();
     try {
-        const records = await fetchServiceRecords();
-        // Small delay so the loading state is perceptible even on fast local data
-        await new Promise(r => setTimeout(r, 300));
-        const match = records.find(r => r.serviceNumber.toUpperCase() === query);
+        const match = await fetchServiceRecord(query);
         if (match) renderResult(match);
         else renderNotFound();
     } catch (err) {
+        console.error(err);
         renderError();
     }
 }
@@ -207,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('trackForm');
     const input = document.getElementById('trackInput');
     const clearBtn = document.getElementById('trackClearBtn');
-    if (!form) return; // tracking widget not present on this page
+    if (!form) return;
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
