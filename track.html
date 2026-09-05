@@ -3,13 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Your Service - Digi Saarthi</title>
+    <title>Track Your Service — Digi Saarthi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .track-hero-box {
+            max-width: 680px;
+            margin: 0 auto;
+            background: var(--white);
+            border: 1.5px solid var(--rule);
+            border-radius: var(--radius-md);
+            padding: 2.2rem;
+            box-shadow: var(--shadow-paper-hover);
+        }
+        .track-input-group {
+            display: flex;
+            align-items: center;
+            background: var(--paper);
+            border: 1.5px solid var(--rule-strong);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .track-input-group:focus-within {
+            border-color: var(--saffron);
+            box-shadow: 0 0 0 3px rgba(226, 134, 26, 0.15);
+            background: var(--white);
+        }
+        .track-prefix-tag {
+            background: var(--paper-dim);
+            color: var(--ink);
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 0.75rem 1rem;
+            border-right: 1.5px solid var(--rule-strong);
+            user-select: none;
+            display: flex;
+            align-items: center;
+        }
+        .track-custom-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--ink);
+            padding: 0.75rem 1rem;
+            letter-spacing: 0.04em;
+        }
+        .track-custom-input::placeholder {
+            color: var(--slate-soft);
+            font-weight: 400;
+            letter-spacing: normal;
+        }
+        .track-btn-cluster {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        .track-btn-cluster .btn {
+            flex: 1;
+        }
+        .track-help-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EAF4EE;
+            border: 1px solid #CFE7D9;
+            color: var(--leaf-deep);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            text-decoration: none;
+            margin-top: 1.5rem;
+            transition: background-color 0.2s ease;
+        }
+        .track-help-pill:hover {
+            background: #D8EDE0;
+        }
+        @media (max-width: 600px) {
+            .track-hero-box { padding: 1.5rem 1.2rem; }
+            .track-btn-cluster { flex-direction: column; }
+            .track-btn-cluster .btn { width: 100%; }
+            .track-prefix-tag { padding: 0.65rem 0.8rem; font-size: 0.95rem; }
+            .track-custom-input { padding: 0.65rem 0.8rem; font-size: 0.95rem; }
+        }
+    </style>
 </head>
-<body>
-    <!-- Minimal header -->
+<body class="admin-body">
+
+    <!-- Header -->
     <header class="track-page-header">
         <div class="container d-flex justify-between align-center">
             <div class="navbar-brand">
@@ -19,52 +107,58 @@
                     <path d="M14 24.5l5 5 11-12" fill="none" stroke="#FBF8F2" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <div>
-                    <h1 style="font-size:1.15rem;">Digi Saarthi</h1>
-                    <span>Common Service Center</span>
+                    <h1 style="font-size:1.15rem; margin:0;">Digi Saarthi</h1>
+                    <span style="font-size:0.75rem; color:var(--slate-soft);">Common Service Center</span>
                 </div>
             </div>
             <a href="index.html" class="track-back-link">← Back to Home</a>
         </div>
     </header>
 
-    <!-- Service Tracking & Verification -->
-    <section id="track" class="section track-section" style="padding-top: 3.5rem;">
+    <!-- Track Section -->
+    <main class="section" style="padding: 3.5rem 0 4.5rem;">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Service Tracking &amp; Verification</h2>
-                <p class="section-lead">Track your service application, payment and completed documents using your Service Number.</p>
+            <div class="section-header" style="margin-bottom: 2rem;">
+                <h2 class="section-title">Track Your Service</h2>
+                <p class="section-lead">Enter your Service Token to view status, payment, and download certificates.</p>
             </div>
 
-            <div class="track-box">
-                <form class="track-form" id="trackForm" style="display: flex; align-items: center; gap: 8px;">
-                    <!-- Fixed Prefix Badge -->
-                    <span style="background: var(--paper-dim); color: var(--ink); font-family: var(--font-head); font-weight: 700; padding: 10px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--rule-strong); user-select: none;">
-                        DS-
-                    </span>
+            <div class="track-hero-box">
+                <form id="trackForm">
+                    <label class="form-label" for="trackInput" style="margin-bottom: 0.5rem; display: block;">Enter Service Number</label>
+                    
+                    <div class="track-input-group">
+                        <span class="track-prefix-tag">DS-</span>
+                        <input type="text" id="trackInput" class="track-custom-input" placeholder="2026-00125" autocomplete="off" aria-label="Service Number">
+                    </div>
 
-                    <!-- Input box for user token/number -->
-                    <input type="text" id="trackInput" placeholder="2026-00125" autocomplete="off" aria-label="Service Number" style="flex: 1; min-width: 140px;">
+                    <p class="track-example" style="text-align: left; margin: 0.6rem 0 0;">
+                        Example: <code>2026-00125</code> <span class="text-muted">(or paste full ID)</span>
+                    </p>
 
-                    <div class="track-form-actions">
-                        <button type="submit" class="btn btn-primary">Search Service</button>
-                        <button type="button" id="trackClearBtn" class="btn btn-outline">Clear</button>
+                    <div class="track-btn-cluster">
+                        <button type="button" id="trackPasteBtn" class="btn btn-outline" style="flex: 0.6;">📋 Paste</button>
+                        <button type="submit" class="btn btn-primary" style="flex: 1.4;">🔍 Search Service</button>
+                        <button type="button" id="trackClearBtn" class="btn btn-outline" style="flex: 0.5;">Clear</button>
                     </div>
                 </form>
-                <p class="track-example">Example: <code>2026-00125</code></p>
 
+                <!-- Status Panel -->
                 <div id="trackResultPanel" class="track-result" role="status" aria-live="polite"></div>
             </div>
 
-            <p class="text-center text-muted" style="margin-top:2.5rem; font-size:0.9rem;">
-                Need help? <a href="https://wa.me/917608913436?text=Hi, I need help tracking my service." target="_blank" style="color:var(--saffron-deep); font-weight:600; text-decoration:none;">Chat with us on WhatsApp</a>
-            </p>
+            <div class="text-center">
+                <a href="https://wa.me/917608913436?text=Hi,%20I%20need%20help%20tracking%20my%20service." target="_blank" class="track-help-pill">
+                    💬 Need help? Message us on WhatsApp
+                </a>
+            </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Minimal footer -->
-    <footer class="footer" style="padding: 2rem 0;">
+    <!-- Footer -->
+    <footer class="footer" style="padding: 2rem 0; margin-top: auto;">
         <div class="container footer-bottom" style="border-top:none; margin-top:0; padding-top:0;">
-            <p>&copy; 2026 Digi Saarthi. All rights reserved. | Digisaarthi, Dulkibandh, Kalahandi | +91 7608913436</p>
+            <p>&copy; 2026 Digi Saarthi. All rights reserved. | Dulkibandh, Kalahandi</p>
         </div>
     </footer>
 
